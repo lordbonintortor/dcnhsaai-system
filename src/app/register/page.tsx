@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-
-const professions = ["Legal", "Medical", "Engineering", "Finance", "Information Technology", "Entrepreneur", "Retired", "Other"];
+import ProfessionFields from "./profession-fields";
 
 export default function RegisterPage() {
   return (
@@ -19,8 +18,8 @@ export default function RegisterPage() {
           <p className="form-intro">Fields marked with <b>*</b> are required. This prototype does not submit or save data yet.</p>
           <form>
             <fieldset><legend>School information</legend><div className="field-grid three"><label>Batch year *<input type="number" placeholder="e.g. 2008" /></label><label>Section<input placeholder="e.g. Rizal" /></label><label>Class adviser<input placeholder="Full name" /></label></div></fieldset>
-            <fieldset><legend>Personal information</legend><div className="field-grid"><label>First name *<input placeholder="First name" /></label><label>Middle or maiden name<input placeholder="Optional" /></label><label>Last name *<input placeholder="Last name" /></label><label>Email address *<input type="email" placeholder="you@example.com" /></label><label>Mobile number<input type="tel" placeholder="+63 9XX XXX XXXX" /></label></div></fieldset>
-            <fieldset><legend>Profession / occupation</legend><p className="field-help">Select all that apply.</p><div className="checkbox-grid">{professions.map((item)=><label key={item}><input type="checkbox" /> <span>{item}</span></label>)}</div><label className="full-field">Current and past employers or businesses<textarea rows={3} placeholder="Up to three entries" /></label></fieldset>
+            <fieldset><legend>Personal information</legend><div className="field-grid"><label>First name *<input placeholder="First name" /></label><label>Middle or maiden name<input placeholder="Optional" /></label><label>Last name *<input placeholder="Last name" /></label><label>Email address *<input type="email" autoComplete="email" placeholder="you@example.com" required /><small>Used for verification, sign-in, and account recovery.</small></label><label>Mobile number (optional)<input type="tel" autoComplete="tel" placeholder="+63 9XX XXX XXXX" /></label></div></fieldset>
+            <fieldset><legend>Profession / occupation *</legend><p className="field-help">Select at least one. You may select all that apply.</p><ProfessionFields /><label className="full-field">Current and past employers or businesses<textarea rows={3} placeholder="Up to three entries" /></label></fieldset>
             <label className="consent"><input type="checkbox" /> <span>I confirm that the information above is accurate and consent to its use for alumni verification and association purposes. *</span></label>
             <button className="button submit-button" type="button">Continue to account setup <span>→</span></button>
           </form>

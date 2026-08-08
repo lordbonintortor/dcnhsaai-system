@@ -4,6 +4,8 @@
 
 /* Association brand refinements */
 .form-aside .brand-logo{box-shadow:0 0 0 2px var(--navy),0 0 0 3px rgba(240,206,36,.55)}
+.field-grid label small{font-size:10px;font-weight:normal;color:#78877c;line-height:1.4}
+.other-profession{max-width:430px;margin:-8px 0 28px;padding:16px;background:#faf8ed;border-left:3px solid var(--gold)}
 .aside-note{border-top-color:#42634c}
 .form-top span a,.login-foot a,.login-options a,.step-label{color:#776100}
 input:focus,textarea:focus{box-shadow:0 0 0 3px rgba(240,206,36,.18)}
