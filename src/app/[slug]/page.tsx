@@ -3,13 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 const pages = {
-  "board-of-trustees": {
-    eyebrow: "Leadership and governance",
-    title: "Board of Trustees",
-    intro: "The Board of Trustees provides direction, accountability, and stewardship for the Davao City National High School Alumni Association, Inc.",
-    emptyTitle: "Trustee profiles are being prepared",
-    emptyText: "Official names, positions, photographs, terms of office, and biographies will be published after confirmation by the association.",
-  },
   "management-reports": {
     eyebrow: "Transparency and accountability",
     title: "Management Reports",
@@ -17,26 +10,19 @@ const pages = {
     emptyTitle: "Reports will be available here",
     emptyText: "The association will confirm which reports are intended for public access and which should be restricted to authorized members.",
   },
-  "projects-and-benefactors": {
+  "alumni-projects": {
     eyebrow: "Impact made together",
-    title: "Projects and Benefactors",
-    intro: "Learn about association-led projects and recognize the individuals, batches, organizations, and partners who make this work possible.",
+    title: "Alumni Projects",
+    intro: "Discover projects led by alumni and the association, and recognize the individuals, batches, organizations, and partners who make this work possible.",
     emptyTitle: "Project stories are coming soon",
     emptyText: "Confirmed projects, outcomes, photographs, and benefactor acknowledgements will be added by authorized association officers.",
   },
-  "association-activities": {
-    eyebrow: "The association in action",
-    title: "Association Activities",
-    intro: "Updates from general assemblies, sponsored seminars and occasions, charitable works, fund-raising activities, and other association programs.",
-    emptyTitle: "No activities published yet",
-    emptyText: "Upcoming and completed association activities will appear here once their dates, details, and photographs are approved.",
-  },
-  "alumni-activities": {
-    eyebrow: "Reconnect and remember",
-    title: "Alumni Activities",
-    intro: "Stay connected through annual homecomings, batch reunions, alumni gatherings, and other community-led activities.",
-    emptyTitle: "Alumni activity announcements are coming soon",
-    emptyText: "Batch representatives and authorized officers will be able to submit confirmed activity details for publication.",
+  "alumni-association-events": {
+    eyebrow: "Our community in action",
+    title: "Alumni & Association Events",
+    intro: "Stay connected through annual homecomings, batch reunions, general assemblies, seminars, charitable works, fund-raising activities, and other alumni and association gatherings.",
+    emptyTitle: "Community events are coming soon",
+    emptyText: "Upcoming and completed events from alumni batches and the association will appear here once their dates, details, and photographs are approved.",
   },
   "outstanding-student-and-alumni-awardees": {
     eyebrow: "Celebrating excellence",
