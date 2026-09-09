@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { association } from "@/lib/association";
 import HeroCarousel from "./hero-carousel";
+import AssociationDropdown from "./association-dropdown";
 
 const Arrow = () => <span aria-hidden="true">↗</span>;
 
@@ -41,12 +42,9 @@ export default function Home() {
         </Link>
         <nav aria-label="Main navigation">
           <Link href="/about">About Us</Link>
-          <details className="nav-menu">
-            <summary>Association <span>⌄</span></summary>
-            <div className="nav-dropdown">
-              {associationLinks.map((item) => <Link key={item.href} href={item.href}>{item.title}</Link>)}
-            </div>
-          </details>
+          <AssociationDropdown>
+            {associationLinks.map((item) => <Link key={item.href} href={item.href}>{item.title}</Link>)}
+          </AssociationDropdown>
           <a href="#updates">News</a>
           <a href="#contact">Contact</a>
         </nav>

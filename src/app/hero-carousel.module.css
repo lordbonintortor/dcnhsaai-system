@@ -20,36 +20,11 @@
   background: linear-gradient(90deg, rgba(8,43,23,.94), rgba(8,43,23,.8) 32%, rgba(8,43,23,.3) 65%, rgba(8,43,23,.08)), linear-gradient(0deg, rgba(8,43,23,.95), transparent 40%);
 }
 
-.topline {
-  position: absolute;
-  top: 28px;
-  right: clamp(24px, 6vw, 96px);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-}
-.sample {
-  padding: 7px 9px;
-  border: 1px solid rgba(255,255,255,.4);
-  background: rgba(8,43,23,.45);
-  font-size: 8px;
-  letter-spacing: .1em;
-}
-
 .content { position: relative; max-width: 720px; margin-top: auto; }
 .content :global(.hero-copy) { padding: 0; max-width: none; }
 .content h1 { font-size: clamp(50px, 5.6vw, 80px); text-shadow: 0 2px 20px rgba(8,43,23,.2); }
 .content :global(.hero-lead) { max-width: 580px; color: #e1e9e3; }
 .content :global(.hero-actions) { flex-wrap: wrap; }
-.caption { margin-left: auto; margin-right: 28px; text-align: right; }
-.caption p { color: var(--gold); font-size: 9px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; margin: 0 0 8px; }
-.caption h2 { color: white; font-size: 25px; line-height: 1.1; margin: 0; letter-spacing: -.025em; }
 
 .controls {
   position: relative;
@@ -75,11 +50,9 @@
 }
 .control:hover { background: rgba(255,255,255,.15); border-color: white; }
 .control span { font-size: 23px; line-height: 1; }
-.control svg { width: 16px; height: 16px; }
 .next { background: var(--gold); border-color: var(--gold); color: var(--navy-dark); }
 .next:hover { background: #ffe459; border-color: #ffe459; }
-.playback { order: 2; }
-.arrows { display: flex; gap: 8px; order: 1; }
+.arrows { display: flex; gap: 8px; order: 1; margin-left: auto; }
 .position { display: flex; align-items: center; gap: 18px; }
 .counter { font-size: 14px; font-variant-numeric: tabular-nums; letter-spacing: .05em; }
 .counter span { color: #c4d2c8; font-size: 11px; }
@@ -98,12 +71,10 @@
   .carousel { min-height: 760px; padding: 230px 24px 24px; gap: 36px; }
   .photo { object-position: 60% 20%; }
   .shade { background: linear-gradient(180deg, rgba(8,43,23,.12), rgba(8,43,23,.48) 22%, rgba(8,43,23,.88) 47%, rgba(8,43,23,.98)); }
-  .topline { top: 22px; right: 24px; }
   .content h1 { font-size: 48px; margin-bottom: 22px; }
   .content :global(.eyebrow) { font-size: 9px; letter-spacing: .16em; margin-bottom: 18px; }
   .content :global(.hero-lead) { font-size: 16px; line-height: 1.65; }
   .content :global(.hero-actions) { margin-top: 26px; gap: 22px; }
-  .caption { display: none; }
   .controls { gap: 8px; padding-top: 16px; }
   .position { gap: 10px; margin-right: auto; }
   .dots button { width: 24px; }

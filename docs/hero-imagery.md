@@ -2,7 +2,7 @@
 
 Generated on September 9, 2026 using the built-in image generation tool (no CLI/API fallback).
 
-These are fictional sample people and scenes for the frontend presentation, not photographs of actual DCNHS alumni or documented association events. The carousel displays “Sample imagery”; image alt text also identifies the pictures as samples. Replace these files and update `src/lib/hero-slides.ts` when approved alumni group photos are available. Original generated files were copied into the project; Next Image serves responsive optimized versions.
+These are fictional sample people and scenes for the frontend presentation, not photographs of actual DCNHS alumni or documented association events. The visible “Sample imagery” badge was removed at the user’s request. Image alt text identifies the pictures as samples. Replace these files and update `src/lib/hero-slides.ts` when approved alumni group photos are available. Original generated files were copied into the project; Next Image serves responsive optimized versions.
 
 ## Saved assets and final prompts
 

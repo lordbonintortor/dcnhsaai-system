@@ -10,10 +10,11 @@ For the latest completed work and a short script for the September 9 presentatio
 
 1. Open the homepage and explain the public information area. Select **Read our story** to show the association history, leadership, and official contact details added from the August 2026 document.
 2. Open **Board of Trustees** and demonstrate the three supplied photo profiles and individual biographies. The dropdown now groups activities under **Alumni & Association Events**, followed by **Alumni Projects**, **Management Reports**, and **Outstanding Student and Alumni Awardees**. These four content areas await their material; officer-managed publishing is a later backend feature.
-3. Select **Join the registry** and walk through the proposed alumni fields.
-4. Explain the planned officer-verification process. Registration does not submit or save data in this prototype.
-5. Open **Sign in** and explain that login and profile maintenance are planned backend features, not working functionality yet.
-6. Resize the browser or use a phone to show the responsive layout.
+3. Select **Join the registry**, enter sample alumni details, and complete **Account setup** with matching demo passwords. Show the registration-complete screen and pending-review status.
+4. Sign in with the account you just created. Show the dashboard, update a profile detail, return to the overview, then sign out and sign in again to demonstrate browser persistence.
+5. For a quick walkthrough, open **Sign in** and enter `alumni.demo@example.com` / `CityHigh2026!`. This loads Alex Santos, Batch 2008, with a demo verified status. The sample-account panel has been removed from the login page. Account and profile data stay on this browser; real authentication, email verification, password recovery, and officer review remain backend work.
+6. Open **Alumni directory**, search by name or year, choose a batch, and use **My batch**. Point out that each result shows only the alumni's name and batch year. Open **My profile** to show the saved directory-listing preview. This demo uses fictional sample entries and accounts registered on the same browser.
+7. Resize the browser or use a phone to show the responsive layout.
 
 ## Decisions needed from the association
 
@@ -32,7 +33,7 @@ For the latest completed work and a short script for the September 9 presentatio
 - The current form requires email and makes mobile optional. Confirm this design before implementing authentication; email delivery and phone-based access are not implemented.
 - Is “Middle/Maiden Name” really mandatory?
 - What does “upload options” mean in the original request?
-- Should alumni be searchable by other alumni, or should all profiles remain private?
+- The requested directory lets signed-in alumni search other batches and displays only names and batch years. Confirm the production eligibility rules for directory listings during the backend phase.
 
 ### Administration
 
@@ -61,4 +62,4 @@ Online payments, messaging, job postings, and a public alumni directory should b
 
 ## Suggested closing
 
-“Once these decisions and the visual direction are approved, I can finalize the database and implementation scope. The immediate next milestone will be a working registration and officer-approval flow using test data.”
+“The browser demo now covers registration, sign-in, an alumni dashboard, and profile updates. The next phase connects this flow to real authentication, a shared database, email verification, and officer approval.”
