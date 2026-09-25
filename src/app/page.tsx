@@ -45,6 +45,7 @@ export default function Home() {
           <AssociationDropdown>
             {associationLinks.map((item) => <Link key={item.href} href={item.href}>{item.title}</Link>)}
           </AssociationDropdown>
+          <Link href="/alumni-directory">Alumni Directory</Link>
           <a href="#updates">News</a>
           <a href="#contact">Contact</a>
         </nav>

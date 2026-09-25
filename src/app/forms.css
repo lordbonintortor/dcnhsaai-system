@@ -28,11 +28,17 @@ input:focus,textarea:focus{box-shadow:0 0 0 3px rgba(240,206,36,.18)}
 .form-error{margin:20px 0 0;border-left:3px solid #ad4034;background:#fff1ee;color:#96372c;padding:14px 16px;font-size:13px;line-height:1.6}
 .form-success{margin:20px 0 0;border-left:3px solid var(--navy);background:#eef4e9;color:var(--navy);padding:14px 16px;font-size:13px;line-height:1.6}
 .demo-note{font-size:12px;line-height:1.7;color:#76816f;margin:22px 0 0}
+.eligibility-note{font-size:12px;line-height:1.7;color:#526548;padding:14px 16px;background:#f1f4e8;border-left:3px solid #869755;margin:20px 0 0}
+.officer-demo-access{margin-top:25px;padding:16px;background:#f4f3e7;font-size:12px;color:#637455;line-height:1.8;overflow-wrap:anywhere}
+.officer-demo-access summary{cursor:pointer;font-weight:700;color:var(--navy)}
+.officer-demo-access p{margin:14px 0 0}
+.officer-demo-access code{font-size:11px}
 .account-summary{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:35px 0;padding:25px;background:#f7f5e9;border:1px solid #e7e7d6}
 .account-summary dt{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#7e816b;margin-bottom:9px}
 .account-summary dd{font-size:14px;line-height:1.5;margin:0;overflow-wrap:anywhere;color:var(--navy)}
 .account-summary>div:last-child{grid-column:1/-1}
 .account-passwords{margin:32px 0 18px}
+.account-photo-preview{display:flex;align-items:center;gap:16px;margin-top:30px;font-size:12px;color:#6d7b66}
 .password-field>label{display:block;font-size:12px;font-weight:700;color:#344d5c;margin-bottom:8px}
 .password-control{position:relative}
 .password-control input{padding-right:65px;font-size:14px}

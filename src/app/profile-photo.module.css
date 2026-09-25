@@ -1,0 +1,14 @@
+.avatar { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; object-fit: cover; background: #e3ebde; color: var(--navy); font-family: Georgia, serif; vertical-align: middle; }
+.optional { font-family: Arial, sans-serif; font-size: 12px; font-weight: 400; color: #74816b; }
+.upload { display: flex; align-items: flex-start; gap: 24px; }
+.controls { flex: 1; min-width: 0; }
+.help { max-width: 460px; margin: 0 0 16px; color: #6d7b66; font-size: 12px; line-height: 1.7; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.actions :global(.button) { padding: 11px 18px; font-size: 12px; }
+.remove { background: transparent; border: 0; padding: 10px 0; font: inherit; font-size: 12px; color: #886233; cursor: pointer; }
+.actions button:focus-visible { outline: 2px solid #b29004; outline-offset: 3px; }
+.remove:disabled { opacity: .6; cursor: wait; }
+.status { color: #6d7b66; font-size: 12px; line-height: 1.6; margin: 12px 0 0; }
+.status:empty { display: none; }
+.field :global(.form-error) { margin-top: 12px; }
+@media (max-width: 540px) { .upload { flex-direction: column; gap: 18px; } }

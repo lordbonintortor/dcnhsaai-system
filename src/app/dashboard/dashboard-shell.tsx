@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { type AlumniProfile } from "@/lib/alumni-profile";
 import { signOutDemo } from "@/lib/demo-account";
 import { useDemoAccount } from "@/lib/use-demo-account";
+import ProfileAvatar from "@/app/profile-avatar";
 import styles from "./dashboard.module.css";
 
 const ProfileContext = createContext<AlumniProfile | null>(null);
@@ -20,6 +21,7 @@ export function useAlumniProfile() {
 export default function DashboardShell({ children }: { children: ReactNode }) {
   const { profile, ready } = useDemoAccount();
   const pathname = usePathname();
+  const inDirectory = pathname === "/dashboard/directory" || pathname.startsWith("/dashboard/directory/");
   const router = useRouter();
 
   useEffect(() => {
@@ -38,7 +40,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
           <p className={styles.navLabel}>Alumni portal</p>
           <nav className={styles.navigation} aria-label="Alumni portal">
             <Link href="/dashboard" aria-current={pathname === "/dashboard" ? "page" : undefined}><span aria-hidden="true">⌂</span> Overview</Link>
-            <Link href="/dashboard/directory" aria-current={pathname === "/dashboard/directory" ? "page" : undefined}><span aria-hidden="true">⌕</span> Alumni directory</Link>
+            <Link href="/dashboard/directory" aria-current={inDirectory ? "page" : undefined}><span aria-hidden="true">⌕</span> Alumni directory</Link>
             <Link href="/dashboard/profile" aria-current={pathname === "/dashboard/profile" ? "page" : undefined}><span aria-hidden="true">◎</span> My profile</Link>
             <Link href="/alumni-association-events"><span aria-hidden="true">◷</span> Alumni activities</Link>
             <Link href="/"><span aria-hidden="true">↗</span> Public website</Link>
@@ -46,7 +48,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
           <div className={styles.sidebarBottom}><p><strong>{profile.firstName} {profile.lastName}</strong><span>Batch {profile.batchYear}</span></p><button type="button" onClick={signOut}>Sign out <span aria-hidden="true">→</span></button></div>
         </aside>
         <div className={styles.workspace}>
-          <header className={styles.topbar}><span>{pathname === "/dashboard/profile" ? "My profile" : pathname === "/dashboard/directory" ? "Alumni directory" : "Dashboard overview"}</span><div><span className={styles.demoBadge}>Browser demo</span><span className={styles.avatar} aria-label={`${profile.firstName} ${profile.lastName}`}>{profile.firstName[0]}{profile.lastName[0]}</span></div></header>
+          <header className={styles.topbar}><span>{pathname === "/dashboard/profile" ? "My profile" : inDirectory ? "Alumni directory" : "Dashboard overview"}</span><div><span className={styles.demoBadge}>Browser demo</span><ProfileAvatar profile={profile} size={36} /></div></header>
           <main className={styles.main}>{children}</main>
           <div className={styles.footer}>DCNHS Alumni Association, Inc. <span>Demo data stays on this browser.</span></div>
         </div>

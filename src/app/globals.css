@@ -15,6 +15,7 @@ nav { display:flex; gap:32px; color:#445966; font-size:14px; }
 nav a:hover,.text-link:hover { color:var(--gold); }
 .nav-menu{position:relative}.nav-menu summary{cursor:pointer;list-style:none;display:flex;gap:6px;align-items:center}.nav-menu summary::-webkit-details-marker{display:none}.nav-menu[open] summary{color:#8a7100}.nav-dropdown{position:absolute;top:30px;left:-24px;width:330px;background:white;border:1px solid #dde4df;box-shadow:0 18px 45px rgba(8,43,23,.14);padding:12px;display:flex;flex-direction:column;z-index:60}.nav-dropdown a{padding:11px 12px;border-bottom:1px solid #edf0ed;font-size:13px;color:#314d3b}.nav-dropdown a:last-child{border:0}.nav-dropdown a:hover{background:var(--cream);color:var(--navy)}
 .header-actions { display:flex; gap:20px; align-items:center; font-size:14px; }
+@media (min-width:901px) and (max-width:1100px) { .site-header { padding-inline:24px; } .site-header > nav { gap:16px; white-space:nowrap; } }
 .button { display:inline-flex; align-items:center; justify-content:center; gap:12px; background:var(--gold); color:#102c3e; font-size:14px; font-weight:700; padding:16px 22px; border-radius:2px; transition:.2s ease; border:0; }
 .button:hover { transform:translateY(-2px); background:#eab82e; }
 .button-small { padding:12px 18px; }

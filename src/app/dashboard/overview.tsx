@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { professionLabel } from "@/lib/alumni-profile";
+import { verificationLabels } from "@/lib/application-review";
+import ProfileAvatar from "@/app/profile-avatar";
 import { useAlumniProfile } from "./dashboard-shell";
+import ApplicationStatus from "./application-status";
 import styles from "./dashboard.module.css";
 
 export default function DashboardOverview() {
@@ -16,15 +19,17 @@ export default function DashboardOverview() {
       </section>
 
       <section className={styles.stats} aria-label="Your alumni information">
-        <div><span>Registry status</span><strong className={verified ? styles.verified : styles.pending}>{verified ? "Verified · Demo" : "Pending review"}</strong><p>{verified ? "Sample verified alumni profile" : "Officer review is a future step"}</p></div>
+        <div><span>Registry status</span><strong className={verified ? styles.verified : styles.pending}>{verificationLabels[profile.verification]}</strong><p>{verified ? "Graduate verification demonstration" : profile.verification === "needs_information" ? "Check the request below" : profile.verification === "rejected" ? "See the officer’s decision below" : "Awaiting a demo officer’s review"}</p></div>
         <div><span>Batch year</span><strong>{profile.batchYear}</strong><p>{profile.section ? `Section ${profile.section}` : "Section not added yet"}</p></div>
         <div><span>Profession / occupation</span><strong className={styles.occupation}>{professionLabel(profile)}</strong><p>Your connection to the alumni network</p></div>
       </section>
 
+      <ApplicationStatus />
+
       <div className={styles.contentGrid}>
         <section className={styles.card}>
           <div className={styles.cardHeading}><h2>Your alumni profile</h2><Link href="/dashboard/profile">Edit profile <span aria-hidden="true">↗</span></Link></div>
-          <div className={styles.profileIdentity}><span className={styles.largeAvatar} aria-hidden="true">{profile.firstName[0]}{profile.lastName[0]}</span><div><h3>{profile.firstName} {profile.lastName}</h3><p>DCNHS · Batch {profile.batchYear}</p></div></div>
+          <div className={styles.profileIdentity}><ProfileAvatar profile={profile} size={58} /><div><h3>{profile.firstName} {profile.lastName}</h3><p>DCNHS · Batch {profile.batchYear}</p></div></div>
           <dl className={styles.profileDetails}><div><dt>Email address</dt><dd>{profile.email}</dd></div><div><dt>Mobile number</dt><dd>{profile.mobile || "Not added"}</dd></div><div><dt>Section</dt><dd>{profile.section || "Not added"}</dd></div><div><dt>Employer / business</dt><dd>{profile.employers || "Not added"}</dd></div></dl>
         </section>
         <section className={`${styles.card} ${styles.nextSteps}`}>

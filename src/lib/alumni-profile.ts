@@ -1,3 +1,6 @@
+import { isProfilePhoto } from "./profile-photo";
+import type { ApplicationReview, VerificationStatus } from "./application-review";
+
 export const professions = ["Legal", "Medical", "Engineering", "Finance", "Information Technology", "Entrepreneur", "Retired", "Other"] as const;
 
 export type ProfileDetails = {
@@ -12,29 +15,42 @@ export type ProfileDetails = {
   professions: string[];
   otherProfession: string;
   employers: string;
+  photoDataUrl?: string;
 };
 
 export type AlumniProfile = ProfileDetails & {
   id: string;
   createdAt: string;
-  verification: "pending" | "verified";
+  verification: VerificationStatus;
+  updatedAt?: string;
+  reviewHistory?: ApplicationReview[];
 };
 
 export const emptyProfile: ProfileDetails = {
   batchYear: "", section: "", adviser: "", firstName: "", middleName: "", lastName: "",
-  email: "", mobile: "", professions: [], otherProfession: "", employers: "",
+  email: "", mobile: "", professions: [], otherProfession: "", employers: "", photoDataUrl: "",
 };
 
 export function normalizeProfile(profile: ProfileDetails): ProfileDetails {
   return {
-    ...Object.fromEntries(Object.entries(profile).map(([key, value]) => [key, typeof value === "string" ? value.trim() : value])),
+    // Only editable details belong here; a stale editor must not overwrite a review.
+    batchYear: profile.batchYear.trim(),
+    section: profile.section.trim(),
+    adviser: profile.adviser.trim(),
+    firstName: profile.firstName.trim(),
+    middleName: profile.middleName.trim(),
+    lastName: profile.lastName.trim(),
     email: profile.email.trim().toLowerCase(),
+    mobile: profile.mobile.trim(),
+    employers: profile.employers.trim(),
+    photoDataUrl: profile.photoDataUrl ?? "",
     professions: [...new Set(profile.professions)],
     otherProfession: profile.professions.includes("Other") ? profile.otherProfession.trim() : "",
-  } as ProfileDetails;
+  };
 }
 
 export function profileError(profile: ProfileDetails): string | null {
+  if (profile.photoDataUrl !== undefined && !isProfilePhoto(profile.photoDataUrl)) return "Please remove the profile photo and choose another JPG, PNG, or WebP image.";
   const year = Number(profile.batchYear);
   if (!Number.isInteger(year) || year < 1922 || year > new Date().getFullYear()) return "Enter a valid batch year from 1922 to the current year.";
   if (!profile.firstName.trim() || !profile.lastName.trim()) return "Enter your first and last name.";

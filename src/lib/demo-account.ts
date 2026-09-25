@@ -1,12 +1,19 @@
 import { type AlumniProfile, type ProfileDetails, normalizeProfile, profileError } from "./alumni-profile";
 import { sampleDirectoryEntries, toDirectoryEntry, type DirectoryEntry } from "./alumni-directory";
+import { toMemberDirectoryProfile, type MemberDirectoryProfile } from "./member-directory";
+import { isProfilePhoto } from "./profile-photo";
+import { isApplicationReview, isVerificationStatus, reviewInputError, type ApplicationReview, type ReviewInput } from "./application-review";
 
-// Frontend demonstration only. These browser records are not authentication or officer verification.
+// Frontend demonstration only. These browser records are not production authentication or evidence of graduation.
 export const DEMO_EMAIL = "alumni.demo@example.com";
 export const DEMO_PASSWORD = "CityHigh2026!";
 const ACCOUNTS_KEY = "dcnhsaai.demo.accounts.v1";
 const SESSION_KEY = "dcnhsaai.demo.session.v1";
 const SAMPLE_KEY = "dcnhsaai.demo.sample-profile.v1";
+const OFFICER_SESSION_KEY = "dcnhsaai.demo.officer-session.v1";
+export const DEMO_OFFICER_EMAIL = "officer.demo@example.com";
+export const DEMO_OFFICER_PASSWORD = "Review2026!";
+const DEMO_OFFICER = { id: "DEMO-OFFICER-001", name: "Demo reviewing officer" };
 export const DEMO_CHANGE_EVENT = "dcnhsaai-demo-change";
 
 export const sampleProfile: AlumniProfile = {
@@ -23,7 +30,10 @@ function isProfile(value: unknown): value is AlumniProfile {
   const record = value as Record<string, unknown>;
   return ["id", "createdAt", "batchYear", "section", "adviser", "firstName", "middleName", "lastName", "email", "mobile", "otherProfession", "employers"].every(key => typeof record[key] === "string")
     && Array.isArray(record.professions) && record.professions.every(item => typeof item === "string")
-    && (record.verification === "pending" || record.verification === "verified");
+    && (record.photoDataUrl === undefined || isProfilePhoto(record.photoDataUrl))
+    && isVerificationStatus(record.verification)
+    && (record.updatedAt === undefined || typeof record.updatedAt === "string")
+    && (record.reviewHistory === undefined || (Array.isArray(record.reviewHistory) && record.reviewHistory.every(isApplicationReview)));
 }
 
 function readAccounts(): StoredAccount[] {
@@ -117,6 +127,16 @@ export function currentDemoProfile(): AlumniProfile | null {
   return readAccounts().find(account => account.profile.id === id)?.profile ?? null;
 }
 
+export function demoMemberProfile(id: string): MemberDirectoryProfile | null {
+  // This browser-demo guard must become server authorization with the real database.
+  if (!currentDemoProfile()) throw new Error("Sign in to your alumni account to view member profiles.");
+  const profile = id === sampleProfile.id ? readSampleProfile() : readAccounts().find(account => account.profile.id === id)?.profile;
+  if (profile) return toMemberDirectoryProfile(profile);
+  const entry = sampleDirectoryEntries.find(item => item.id === id);
+  // Name-only presentation samples have no additional personal information.
+  return entry ? { ...entry, firstName: entry.name, lastName: "", photoDataUrl: "", profession: "" } : null;
+}
+
 export function signOutDemo() {
   sessionStorage.removeItem(SESSION_KEY);
   localStorage.removeItem(SESSION_KEY);
@@ -129,8 +149,93 @@ export function updateDemoProfile(details: ProfileDetails) {
   const normalized = normalizeProfile({ ...details, email: current.email });
   const error = profileError(normalized);
   if (error) throw new Error(error);
-  const updated = { ...current, ...normalized };
-  if (current.id === sampleProfile.id) localStorage.setItem(SAMPLE_KEY, JSON.stringify(updated));
-  else saveAccounts(readAccounts().map(account => account.profile.id === current.id ? { ...account, profile: updated } : account));
+  let updated: AlumniProfile = { ...current, ...normalized, updatedAt: new Date().toISOString() };
+  const identityChanged = (["firstName", "middleName", "lastName", "batchYear"] as const).some(key => current[key] !== normalized[key]);
+  if (identityChanged && current.verification === "verified") {
+    updated = withReview(updated, {
+      status: "pending", actor: "applicant", reviewer: `${updated.firstName} ${updated.lastName}`,
+      message: "Name or batch year changed. The application has returned to officer review.",
+    });
+  }
+  saveProfile(updated);
+  notify();
+}
+
+function saveProfile(profile: AlumniProfile) {
+  if (profile.id === sampleProfile.id) {
+    try { localStorage.setItem(SAMPLE_KEY, JSON.stringify(profile)); }
+    catch { throw new Error("Your browser could not save the demo profile. Check that browser storage is available and try again."); }
+  } else {
+    const accounts = readAccounts();
+    if (!accounts.some(account => account.profile.id === profile.id)) throw new Error("This demo application is no longer available.");
+    saveAccounts(accounts.map(account => account.profile.id === profile.id ? { ...account, profile } : account));
+  }
+}
+
+function withReview(profile: AlumniProfile, entry: Omit<ApplicationReview, "id" | "reviewedAt">): AlumniProfile {
+  const reviewedAt = new Date().toISOString();
+  return {
+    ...profile, verification: entry.status, updatedAt: reviewedAt,
+    reviewHistory: [...(profile.reviewHistory ?? []), { ...entry, id: crypto.randomUUID(), reviewedAt }],
+  };
+}
+
+// A separate browser-demo session keeps the officer screens out of the alumni flow.
+// These client-side checks must be replaced with server authorization in production.
+export function currentDemoOfficer() {
+  return sessionStorage.getItem(OFFICER_SESSION_KEY) === DEMO_OFFICER.id ? DEMO_OFFICER : null;
+}
+
+export function signInDemoOfficer(email: string, password: string) {
+  if (email.trim().toLowerCase() !== DEMO_OFFICER_EMAIL || password !== DEMO_OFFICER_PASSWORD) throw new Error("The email or password does not match the demo officer account.");
+  try { sessionStorage.setItem(OFFICER_SESSION_KEY, DEMO_OFFICER.id); }
+  catch { throw new Error("Your browser could not start the officer demo. Allow browser storage and try again."); }
+  notify();
+}
+
+export function signOutDemoOfficer() {
+  sessionStorage.removeItem(OFFICER_SESSION_KEY);
+  notify();
+}
+
+function requireDemoOfficer() {
+  const officer = currentDemoOfficer();
+  if (!officer) throw new Error("Sign in to the officer demo to review applications.");
+  return officer;
+}
+
+export function demoApplications(): AlumniProfile[] {
+  requireDemoOfficer();
+  // Never return the stored password verifiers to the review components.
+  return [readSampleProfile(), ...readAccounts().map(account => account.profile)]
+    .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+}
+
+export function reviewDemoApplication(expected: AlumniProfile, input: ReviewInput) {
+  const officer = requireDemoOfficer();
+  const error = reviewInputError(input);
+  if (error) throw new Error(error);
+  const current = demoApplications().find(profile => profile.id === expected.id);
+  if (!current) throw new Error("This demo application is no longer available.");
+  if (JSON.stringify(current) !== JSON.stringify(expected)) throw new Error("This application changed. Reopen it and check the latest details before saving your decision.");
+  if (input.status === current.verification) throw new Error("Choose a different status to record a new decision.");
+  const updated = withReview(current, {
+    status: input.status, actor: "officer", reviewer: officer.name, message: input.message.trim(),
+    ...(input.status === "verified" ? { reference: input.reference, referenceNote: input.referenceNote!.trim() } : {}),
+  });
+  saveProfile(updated);
+  notify();
+}
+
+export function resubmitDemoApplication() {
+  const current = currentDemoProfile();
+  if (!current) throw new Error("Sign in again to resubmit your application.");
+  if (current.verification !== "needs_information") throw new Error("Only applications needing information can be resubmitted.");
+  const error = profileError(current);
+  if (error) throw new Error(error);
+  saveProfile(withReview(current, {
+    status: "pending", actor: "applicant", reviewer: `${current.firstName} ${current.lastName}`,
+    message: "The applicant resubmitted their saved details for officer review.",
+  }));
   notify();
 }

@@ -64,7 +64,7 @@ export default function AboutPage() {
             <Link className={`secondary-link ${styles.profileLink}`} href="/board-of-trustees/niceforo-solis">Read his profile <span aria-hidden="true">↗</span></Link>
             <span className={styles.asOf}>As of {association.sourceDate}</span>
           </section>
-          <section className={styles.contact}>
+          <section id="contact" className={styles.contact}>
             <p className="eyebrow gold">Stay connected</p>
             <h2>Your association.<br />Your community.</h2>
             <address>

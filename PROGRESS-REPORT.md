@@ -1,7 +1,7 @@
 # DCNHSAAI Website Progress Report
 
 **Date:** September 9, 2026  
-**Current stage:** Working frontend demo with registration, sign-in, alumni dashboard, profile updates, and content integration. Backend development is scheduled for a later phase.
+**Current stage:** Working frontend demo with registration, sign-in, alumni dashboard, profile photos, officer review, profile updates, and content integration. Backend development is scheduled for a later phase. September 25 additions are recorded at the end of this report.
 
 ## Completed in this update
 
@@ -73,7 +73,7 @@ These are questions already recorded in `PRESENTATION-NOTES.md`; they should not
 
 ## Deferred backend work
 
-Shared database and storage, production authentication and authorization, email verification and password recovery, officer review and approval, and an administration dashboard. Registration, sign-in, and profile editing currently operate only against browser demo records. The client-side dashboard redirect is a demo navigation guard, not server authorization. New passwords use salted PBKDF2 verifiers in browser storage; this does not make the frontend demo suitable for real alumni data.
+Shared database and storage, production authentication and authorization, email verification and password recovery, school-record integration, private proof storage, and production officer administration. Registration, sign-in, profile editing, and the September 25 officer review addition operate only against browser demo records. Client-side session checks are demo navigation guards, not server authorization. New passwords use salted PBKDF2 verifiers in browser storage; this does not make the frontend demo suitable for real alumni data.
 
 ## Validation
 
@@ -88,3 +88,38 @@ Shared database and storage, production authentication and authorization, email 
 - Navigation update checks — exact five-item dropdown order, matching homepage cards, combined events and renamed projects pages, redirects from all three former URLs, and mobile homepage layout passed. Lint and the Webpack production build also passed after this update.
 - Hero carousel checks — all three images load; arrows wrap correctly; indicators, keyboard arrows, exact two-second rotation, photo hover without stopping, control hover pause, focus pause, reduced motion, and mobile swipes pass. After removing the pause/play button, desktop and phone checks confirmed two-second rotation, arrows, indicators, focus pause and automatic resume, and reduced-motion behavior. Vertical swipes still scroll. At eight widths from 320 to 1920px, the photos cover the full hero and the text stays within it, with no horizontal overflow or clipped controls. Homepage sample news and registration links remain; the removed homepage card section stays absent. Desktop and phone screenshots were reviewed, and no browser page errors occurred.
 - The default Turbopack production build encountered the same environment restriction as the earlier check: its CSS processing worker could not bind a local port. Webpack provided the successful production-build check; the project’s default build configuration was not changed.
+
+## September 25, 2026 — Profile photos
+
+- Added an optional profile photo upload to registration, including a circular preview, replacement/removal controls, and a preview during account setup. Returning to the first step preserves the selection.
+- Accepts JPG, PNG, and WebP files up to 5 MB. Images are center-cropped and resized to a 256×256 JPEG before browser storage. Invalid, oversized, empty, and unreadable files show errors without replacing an existing selection.
+- The saved photo appears in the dashboard header and profile summary. My profile supports replacing or removing it with Save changes. Existing accounts without photos retain their initials, and directory listings still expose only names and batch years.
+- Browser checks passed for registration with and without a photo, all three image formats, selection errors, back/continue navigation, sign-in/reload persistence, profile replacement/removal, sample and older accounts, edits while an image is being processed, and a simulated storage-quota failure. Registration, profile editing, and the dashboard fit 320/390/768/1024/1440px with no horizontal overflow. Desktop/mobile registration screenshots were reviewed; no browser page errors occurred.
+- Lint and the default production build passed, including TypeScript and page generation. Photos remain part of the browser demo; shared photo storage is deferred to the backend phase.
+
+## September 25, 2026 — Graduate application review
+
+- Confirmed eligibility with the user: **DCNHS graduates only**. Registration now states this rule and includes it in the applicant declaration.
+- Added `/admin/login` and `/admin` with a separate officer demo session. Credentials: `officer.demo@example.com` / `Review2026!`. The queue shows registered browser accounts and the existing sample profile, with counts, name/email/year search, status and batch filters, pagination, photos, and application details.
+- Added approval, requests for more information, rejection, and return to pending review. Every decision requires an applicant message; approval also requires a reference type, reference description, and explicit graduation confirmation. Proposed references are not connected to real school records.
+- Recorded decision history with reviewer, time, message, and approval reference. Applicants see their status and messages, can save corrections, and can resubmit applications marked Needs information. Officer reference details are omitted from the applicant UI. All browser records remain client-controlled.
+- Limited profile normalization to editable fields so a stale profile form cannot overwrite an officer decision or review history. Name or batch changes on a verified account return it to pending; contact and photo edits preserve status. Failed storage writes preserve the previous account and history.
+- Service checks passed for officer guards, required approval evidence, metadata isolation, stale decisions, preservation of reviews during profile saves, identity changes, storage failures, resubmission, rejection/reopening, and officer sign-out. Browser checks passed for the full graduate registration → clarification → correction → resubmission → approval flow, live updates across tabs, rejection and reopening, persistence, search/filtering/pagination, and officer/alumni session separation. Existing photo-upload checks also passed.
+- Officer sign-in, the review screen, and applicant status views fit 320/390/768/1024/1440px without horizontal overflow. No browser page errors were observed. Lint and production-build checks passed.
+- Final desktop/mobile screenshots, including the approval-reference controls, were reviewed. The existing approximately 15 MB SVG logo triggered an automated Chrome cache-write failure; it decoded correctly with caching disabled. The source logo asset was not changed.
+- This remains a workflow demonstration. Shared accounts, server-enforced officer permissions, school-record access, private proof storage, retention rules, and email notices are the next backend work. No proof upload has been added.
+
+## September 25, 2026 — Public alumni directory
+
+- Added **Alumni Directory** immediately after **Association** in the homepage navigation. It opens `/alumni-directory` without requiring sign-in.
+- Public listings display only alumni names and batch years, with name/year search and a batch filter. Photos, contact information, employment details, review records, and private profile links are absent from listings and search.
+- Shared the directory component with the existing member directory, preserving its **My batch** and profile-edit controls. Public listings still use sample entries and accounts saved in the current browser; shared records require the backend.
+- Lint, production build, and browser checks passed for anonymous navigation/reload, search/filter/reset, private-field exclusion, protected profile access, and member-directory behavior. The header fits 901–1440px, and the directory fits 320–1440px without horizontal overflow. No browser page errors occurred. Desktop and phone screenshots were reviewed.
+
+## September 25, 2026 — Member directory profiles
+
+- Added profile links inside the signed-in alumni directory and `/dashboard/directory/[id]` pages showing name, batch year, photo/initials, and profession. Used these basic fields as the initial scope while awaiting any further field preferences. Public directory results remain names and batch years only, with no profile links, even for signed-in visitors.
+- Added an explicit member-profile projection and alumni-session check. Contact details, employer, middle/maiden name, section/adviser, credentials, and application-review records are excluded. Officer-only sessions cannot open the alumni profile view. Fictional name-only samples show profession as not provided; missing profiles have a return-to-directory state.
+- Added visibility explanations to registration and profile editing, plus a preview of the saved member profile. Profile changes update the member view, and the directory navigation remains selected on profile pages.
+- Lint, production build, service checks, and browser checks passed. Verified member links, photo loading and initials fallback, allowed/excluded fields, direct URLs, reload and sign-out, sample/missing profiles, own-profile editing, batch filters, and public-directory isolation. Layouts fit 320/390/768/1024/1440px; desktop and phone screenshots were reviewed, with no browser page errors.
+- Access checks remain part of the browser demo. The shared backend must enforce member authorization and field-level visibility before production use.

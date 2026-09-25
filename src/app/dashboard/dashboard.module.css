@@ -21,8 +21,6 @@
 .topbar { min-height: 80px; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 40px; border-bottom: 1px solid #e1e6db; background: var(--paper); font-size: 12px; color: #68766b; }
 .topbar > div { display: flex; align-items: center; gap: 18px; }
 .demoBadge { color: #766115; background: #f5edc6; padding: 6px 10px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
-.avatar, .largeAvatar { flex-shrink: 0; border-radius: 50%; display: grid; place-items: center; background: #e3ebde; color: var(--navy); font-family: Georgia, serif; }
-.avatar { width: 36px; height: 36px; font-size: 14px; }
 .main { max-width: 1440px; padding: 35px 40px 45px; margin: 0 auto; }
 .welcome { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 42px; background: var(--navy); color: white; overflow: hidden; }
 .eyebrow { font-size: 9px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase; color: #8a720b; margin: 0 0 15px; }
@@ -48,7 +46,6 @@
 .cardHeading { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 28px; }
 .cardHeading a { color: #7c680b; font-size: 11px; font-weight: 700; }
 .profileIdentity { display: flex; align-items: center; gap: 16px; }
-.largeAvatar { width: 58px; height: 58px; font-size: 23px; }
 .profileIdentity h3 { font-family: Georgia, serif; font-weight: 400; font-size: 24px; margin: 0 0 5px; overflow-wrap: anywhere; }
 .profileIdentity p { margin: 0; font-size: 11px; color: #7c8777; }
 .profileDetails { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; border-top: 1px solid #e8ebdf; padding-top: 24px; margin: 25px 0 0; }
@@ -85,6 +82,19 @@
 .footer { padding: 0 40px 28px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; font-size: 10px; color: #7f8875; }
 .loading { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: var(--cream); color: var(--navy); }
 .loading a { font-size: 13px; text-decoration: underline; }
+.applicationStatus { margin: 0 0 24px; border-left: 3px solid #77904f; }
+.applicationStatus > p:not(.eyebrow) { font-size: 13px; color: #68765e; line-height: 1.8; margin: 16px 0 0; }
+.applicationStatus .reviewMessage { white-space: pre-wrap; overflow-wrap: anywhere; }
+.applicationStatus .reviewMeta { font-size: 11px; color: #7c876e; }
+.applicationStatus a:not(:global(.button)) { text-decoration: underline; }
+.applicationStatus :global(.form-actions) { margin-top: 20px; }
+.applicationStatus :global(.button) { font-size: 12px; }
+.applicationHistory { margin-top: 22px; border-top: 1px solid #e0e6d6; padding-top: 18px; font-size: 12px; }
+.applicationHistory summary { cursor: pointer; font-weight: 700; }
+.applicationHistory ol { padding-left: 20px; }
+.applicationHistory li { margin-top: 20px; }
+.applicationHistory p { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.7; margin: 10px 0; }
+.applicationHistory small { color: #7c876e; }
 .portal :is(a, button, summary):focus-visible { outline: 2px solid #ab8800; outline-offset: 4px; }
 @media (max-width: 1200px) { .portal { grid-template-columns: 218px minmax(0, 1fr); } .sidebar { padding: 30px 18px 22px; } .brand strong { font-size: 15px; } .main { padding: 28px; } .welcome { padding: 32px; } .batchArt { flex-basis: 130px; height: 130px; margin-right: 0; } .batchArt strong { font-size: 42px; } .contentGrid { grid-template-columns: 1fr; } .stats > div { padding: 20px; } }
 @media (max-width: 850px) { .portal { display: block; } .sidebar { position: relative; height: auto; padding: 20px 24px 15px; display: grid; grid-template-columns: 1fr auto; gap: 18px; } .navLabel { display: none; } .navigation { grid-column: 1 / -1; grid-row: 2; flex-direction: row; flex-wrap: wrap; gap: 7px; } .navigation a { padding: 9px 11px; font-size: 11px; } .navigation a > span { font-size: 17px; width: auto; } .sidebarBottom { margin: 0; border: 0; padding: 0; align-self: center; } .sidebarBottom p { display: none; } .sidebarBottom button { gap: 20px; padding: 10px; } .topbar { padding: 16px 24px; min-height: 68px; } .main { padding: 24px; } .footer { padding: 0 24px 24px; } }

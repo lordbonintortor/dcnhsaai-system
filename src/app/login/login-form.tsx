@@ -39,7 +39,6 @@ export default function LoginForm() {
         {error && <p className="form-error" role="alert">{error}</p>}
         <button type="submit" className="button submit-button" disabled={busy}>{busy ? "Signing in…" : "Sign in"} <span aria-hidden="true">→</span></button>
       </form>
-      <p className="demo-note login-demo-note">Frontend demo · Accounts are available on this browser only.</p>
     </>
   );
 }

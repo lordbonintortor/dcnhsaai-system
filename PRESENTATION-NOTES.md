@@ -12,9 +12,10 @@ For the latest completed work and a short script for the September 9 presentatio
 2. Open **Board of Trustees** and demonstrate the three supplied photo profiles and individual biographies. The dropdown now groups activities under **Alumni & Association Events**, followed by **Alumni Projects**, **Management Reports**, and **Outstanding Student and Alumni Awardees**. These four content areas await their material; officer-managed publishing is a later backend feature.
 3. Select **Join the registry**, enter sample alumni details, and complete **Account setup** with matching demo passwords. Show the registration-complete screen and pending-review status.
 4. Sign in with the account you just created. Show the dashboard, update a profile detail, return to the overview, then sign out and sign in again to demonstrate browser persistence.
-5. For a quick walkthrough, open **Sign in** and enter `alumni.demo@example.com` / `CityHigh2026!`. This loads Alex Santos, Batch 2008, with a demo verified status. The sample-account panel has been removed from the login page. Account and profile data stay on this browser; real authentication, email verification, password recovery, and officer review remain backend work.
-6. Open **Alumni directory**, search by name or year, choose a batch, and use **My batch**. Point out that each result shows only the alumni's name and batch year. Open **My profile** to show the saved directory-listing preview. This demo uses fictional sample entries and accounts registered on the same browser.
+5. For a quick walkthrough, open **Sign in** and enter `alumni.demo@example.com` / `CityHigh2026!`. This loads Alex Santos, Batch 2008, with a demo verified status. The sample-account panel has been removed from the login page. Account and profile data stay on this browser; real authentication, email verification, password recovery, and shared officer review remain backend work.
+6. Open the homepage's **Alumni Directory** link, immediately after **Association**, without signing in. Search by name or year and choose a batch. Each result shows only the alumni's name and batch year. Sign in and open the portal's directory to demonstrate **My batch** and select a name to open a member profile with photo, name, batch year, and profession. Contact and officer-review details are excluded. **My profile** explains the visibility and offers a preview of the saved member profile. This demo uses fictional sample entries and accounts registered on the same browser; name-only samples have no additional profession or photo.
 7. Resize the browser or use a phone to show the responsive layout.
+8. Open **Officer sign in** at `/admin/login`, using `officer.demo@example.com` / `Review2026!`. Review the fictional registration just created. Request a correction, show the message on the alumni dashboard, update the profile, and resubmit. Then approve using a fictional graduation reference and show the recorded history. Explain that this demonstrates the workflow; it does not verify real school records or accept proof documents.
 
 ## Decisions needed from the association
 
@@ -27,13 +28,13 @@ For the latest completed work and a short script for the September 9 presentatio
 
 ### Registration
 
-- Who qualifies to register: graduates only, former students, teachers, or staff?
+- **Confirmed September 25, 2026:** registration and verified alumni status are for DCNHS graduates only.
 - How will officers verify alumni status?
 - Is a supporting document required? If so, what type?
 - The current form requires email and makes mobile optional. Confirm this design before implementing authentication; email delivery and phone-based access are not implemented.
 - Is “Middle/Maiden Name” really mandatory?
 - What does “upload options” mean in the original request?
-- The requested directory lets signed-in alumni search other batches and displays only names and batch years. Confirm the production eligibility rules for directory listings during the backend phase.
+- The directory is public and displays only names and batch years, as requested. Confirm the production eligibility rules for directory listings during the backend phase.
 
 ### Administration
 
@@ -58,7 +59,7 @@ For the latest completed work and a short script for the September 9 presentatio
 - Alumni login and profile updates
 - Administrator dashboard and basic exports
 
-Online payments, messaging, job postings, and a public alumni directory should be considered later, after the core registry is secure and working.
+Online payments, messaging, and job postings should be considered later, after the core registry is secure and working. The public directory is now part of the prototype, limited to alumni names and batch years.
 
 ## Suggested closing
 

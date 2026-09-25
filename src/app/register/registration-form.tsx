@@ -6,6 +6,8 @@ import { emptyProfile, normalizeProfile, profileError, type AlumniProfile } from
 import { emailExists, registerDemoAccount } from "@/lib/demo-account";
 import AlumniFields from "./alumni-fields";
 import PasswordField from "../password-field";
+import ProfilePhotoField from "../profile-photo-field";
+import ProfileAvatar from "../profile-avatar";
 
 export default function RegistrationForm() {
   const [step, setStep] = useState(1);
@@ -15,6 +17,7 @@ export default function RegistrationForm() {
   const [confirmation, setConfirmation] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [photoBusy, setPhotoBusy] = useState(false);
   const [created, setCreated] = useState<AlumniProfile | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
 
@@ -23,7 +26,7 @@ export default function RegistrationForm() {
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
-    if (busy) return;
+    if (busy || photoBusy) return;
     if (step === 1) {
       const normalized = normalizeProfile(details);
       const validation = profileError(normalized);
@@ -59,7 +62,7 @@ export default function RegistrationForm() {
       <h1 ref={heading} tabIndex={-1}>You’re part of the story, {created.firstName}.</h1>
       <p>Your demo account is ready. Sign in to see your alumni dashboard.</p>
       <dl className="account-summary"><div><dt>Sign-in email</dt><dd>{created.email}</dd></div><div><dt>Batch</dt><dd>{created.batchYear}</dd></div><div><dt>Registry status</dt><dd>Pending officer review</dd></div></dl>
-      <p className="demo-note">Saved on this browser only. Officer review and email verification are not connected yet.</p>
+      <p className="demo-note">Saved on this browser only. Officer decisions can be tried in the officer demo; email verification is not connected.</p>
       <Link className="button submit-button" href="/login">Sign in to your account <span aria-hidden="true">→</span></Link>
     </div>
   );
@@ -73,14 +76,18 @@ export default function RegistrationForm() {
       <p className="step-label">Step {step} of 2 · {step === 1 ? "Alumni information" : "Account setup"}</p>
       <h1 ref={heading} tabIndex={-1}>{step === 1 ? "Join the alumni registry" : "Set up your account"}</h1>
       <p className="form-intro">{step === 1 ? "Fields marked with * are required. Use sample details for this browser demo." : "Choose a demo password with at least 8 characters."}</p>
+      {step === 1 && <p className="eligibility-note">For graduates of Davao City National High School. Your alumni status is subject to officer review.</p>}
       <form onSubmit={submit}>
         {step === 1 ? (
           <>
+            <ProfilePhotoField profile={details} onChange={photoDataUrl => setDetails(current => ({ ...current, photoDataUrl }))} onBusyChange={setPhotoBusy} />
             <AlumniFields value={details} onChange={setDetails} />
-            <label className="consent"><input name="consent" type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)} required /> <span>I confirm that the information above is accurate and consent to its use for alumni verification and association purposes. *</span></label>
+            <p className="demo-note">The public directory shows your name and batch year. Signed-in alumni can also view your profile photo and profession.</p>
+            <label className="consent"><input name="consent" type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)} required /> <span>I confirm that I graduated from Davao City National High School, that the information above is accurate, and consent to its use for alumni verification and association purposes. *</span></label>
           </>
         ) : (
           <>
+            {details.photoDataUrl && <div className="account-photo-preview"><ProfileAvatar profile={details} size={72} /><p>Your profile photo</p></div>}
             <dl className="account-summary"><div><dt>Alumnus</dt><dd>{details.firstName} {details.lastName}</dd></div><div><dt>Batch</dt><dd>{details.batchYear}</dd></div><div><dt>Sign-in email</dt><dd>{details.email}</dd></div></dl>
             <div className="field-grid account-passwords">
               <PasswordField id="password" label="Password *" value={password} onChange={setPassword} />
@@ -92,7 +99,7 @@ export default function RegistrationForm() {
         {error && <p className="form-error" role="alert">{error}</p>}
         <div className="form-actions">
           {step === 2 && <button type="button" className="button button-outline" disabled={busy} onClick={() => { setStep(1); setError(""); window.scrollTo({ top: 0, behavior: "instant" }); }}>← Back to information</button>}
-          <button className="button" type="submit" disabled={busy}>{busy ? "Creating account…" : step === 1 ? "Continue to account setup" : "Create demo account"} <span aria-hidden="true">→</span></button>
+          <button className="button" type="submit" disabled={busy || photoBusy}>{photoBusy ? "Preparing photo…" : busy ? "Creating account…" : step === 1 ? "Continue to account setup" : "Create demo account"} <span aria-hidden="true">→</span></button>
         </div>
       </form>
     </>
