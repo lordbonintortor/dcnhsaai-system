@@ -4,8 +4,17 @@ import { useEffect, useState } from "react";
 import type { AlumniProfile } from "./alumni-profile";
 import { ACCOUNT_CHANGE_EVENT, api } from "./account-api";
 
+const resourceCache = new Map<string, unknown>();
+
 export function useResource<T>(path: string) {
-  const [result, setResult] = useState<{ path: string; data?: T; ready: boolean; error: string }>({ path, ready: false, error: "" });
+  const cached = resourceCache.get(path) as { profile?: AlumniProfile | null } | undefined;
+  const hasUsableSession = path !== "/api/account/session" || cached?.profile;
+  const [result, setResult] = useState<{ path: string; data?: T; ready: boolean; error: string }>(() => ({
+    path,
+    data: resourceCache.get(path) as T | undefined,
+    ready: resourceCache.has(path) && Boolean(hasUsableSession),
+    error: "",
+  }));
   useEffect(() => {
     let active = true;
     let controller: AbortController | undefined;
@@ -14,12 +23,17 @@ export function useResource<T>(path: string) {
       controller = new AbortController();
       try {
         const data = await api<T>(path, "GET", undefined, controller.signal);
+        resourceCache.set(path, data);
         if (active) setResult({ path, data, ready: true, error: "" });
       } catch (cause) {
         if (active && !(cause instanceof DOMException && cause.name === "AbortError")) setResult({ path, ready: true, error: cause instanceof Error ? cause.message : "Unable to load this page." });
       }
     }
-    const onChange = () => { void refresh(); };
+    const onChange = () => {
+      resourceCache.delete(path);
+      setResult({ path, ready: false, error: "" });
+      void refresh();
+    };
     const onFocus = () => { if (document.visibilityState === "visible") void refresh(); };
     const channel = typeof BroadcastChannel === "undefined" ? null : new BroadcastChannel(ACCOUNT_CHANGE_EVENT);
     if (channel) channel.onmessage = onChange;

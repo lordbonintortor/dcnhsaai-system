@@ -15,6 +15,16 @@ nav { display:flex; gap:32px; color:#445966; font-size:14px; }
 nav a:hover,.text-link:hover { color:var(--gold); }
 .nav-menu{position:relative}.nav-menu summary{cursor:pointer;list-style:none;display:flex;gap:6px;align-items:center}.nav-menu summary::-webkit-details-marker{display:none}.nav-menu[open] summary{color:#8a7100}.nav-dropdown{position:absolute;top:30px;left:-24px;width:330px;background:white;border:1px solid #dde4df;box-shadow:0 18px 45px rgba(8,43,23,.14);padding:12px;display:flex;flex-direction:column;z-index:60}.nav-dropdown a{padding:11px 12px;border-bottom:1px solid #edf0ed;font-size:13px;color:#314d3b}.nav-dropdown a:last-child{border:0}.nav-dropdown a:hover{background:var(--cream);color:var(--navy)}
 .header-actions { display:flex; gap:20px; align-items:center; font-size:14px; }
+.public-profile { display:flex; align-items:center; gap:16px; position:relative; }
+.public-profile-link { display:flex; align-items:center; gap:9px; color:var(--navy); }
+.public-profile-copy { display:flex; flex-direction:column; gap:3px; }
+.public-profile-link strong { font-size:13px; }
+.public-profile-link small { color:#6c7880; font-size:10px; text-transform:uppercase; letter-spacing:.1em; }
+.public-profile-link:hover strong { color:#8a7100; }
+.public-sign-out { border:0; border-left:1px solid #dfe5e8; background:transparent; color:#617267; cursor:pointer; font:inherit; font-size:12px; padding:8px 0 8px 16px; }
+.public-sign-out:hover { color:var(--navy); }
+.public-sign-out:disabled { cursor:wait; opacity:.6; }
+.public-sign-out-error { position:absolute; right:0; top:calc(100% + 10px); width:220px; color:#9b3d2e; font-size:11px; line-height:1.4; text-align:right; }
 @media (min-width:901px) and (max-width:1100px) { .site-header { padding-inline:24px; } .site-header > nav { gap:16px; white-space:nowrap; } }
 .button { display:inline-flex; align-items:center; justify-content:center; gap:12px; background:var(--gold); color:#102c3e; font-size:14px; font-weight:700; padding:16px 22px; border-radius:2px; transition:.2s ease; border:0; }
 .button:hover { transform:translateY(-2px); background:#eab82e; }
@@ -65,4 +75,4 @@ footer{background:#061f11;color:#c8d4ca;padding:70px 7vw 25px}.footer-main{displ
 
 @media(max-width:900px){nav{display:none}.hero{grid-template-columns:1fr}.hero-art{min-height:480px}.about,.registry-callout{grid-template-columns:1fr}.registry-pattern{min-height:300px}.program-grid,.news-grid{grid-template-columns:1fr}.program-grid article{border-right:0;border-bottom:1px solid #d6dde0;padding-left:0!important}.footer-main{grid-template-columns:1fr 1fr}.section-heading{align-items:start;flex-direction:column}.trust-strip p{flex-direction:column;align-items:start}.header-actions .text-link{display:none}}
 @media(max-width:760px){.content-header .back-link{display:none}.content-body{grid-template-columns:1fr}.content-empty{padding:40px 28px}.content-hero{padding:70px 24px}.simple-footer{flex-direction:column;gap:12px}.content-header .button{display:none}}
-@media(max-width:560px){.site-header{height:72px;padding:0 18px}.brand strong{font-size:15px}.brand-logo{width:40px;height:40px}.button-small{font-size:11px;padding:10px 12px}.hero-copy{padding:75px 24px}.hero-actions{align-items:flex-start;flex-direction:column}.hero-art{min-height:390px}.year-card{top:35px;left:20px}.trust-strip{grid-template-columns:1fr}.trust-strip p{border-right:0;border-bottom:1px solid #e7ebed;flex-direction:row}.section{padding:75px 24px}.check-row{flex-direction:column;gap:10px}.registry-copy{padding:65px 24px}.footer-main{grid-template-columns:1fr}.footer-bottom{flex-direction:column;gap:12px}}
+@media(max-width:560px){.site-header{height:72px;padding:0 18px}.brand strong{font-size:15px}.brand-logo{width:40px;height:40px}.button-small{font-size:11px;padding:10px 12px}.public-profile{gap:8px}.public-profile-link strong{font-size:11px}.public-profile-link small{font-size:8px}.public-sign-out{font-size:10px;padding-left:8px}.hero-copy{padding:75px 24px}.hero-actions{align-items:flex-start;flex-direction:column}.hero-art{min-height:390px}.year-card{top:35px;left:20px}.trust-strip{grid-template-columns:1fr}.trust-strip p{border-right:0;border-bottom:1px solid #e7ebed;flex-direction:row}.section{padding:75px 24px}.check-row{flex-direction:column;gap:10px}.registry-copy{padding:65px 24px}.footer-main{grid-template-columns:1fr}.footer-bottom{flex-direction:column;gap:12px}}

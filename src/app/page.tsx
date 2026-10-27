@@ -3,6 +3,7 @@ import Image from "next/image";
 import { association } from "@/lib/association";
 import HeroCarousel from "./hero-carousel";
 import AssociationDropdown from "./association-dropdown";
+import PublicHeader from "./public-header";
 
 const Arrow = () => <span aria-hidden="true">↗</span>;
 
@@ -32,27 +33,13 @@ const associationLinks = [
 export default function Home() {
   return (
     <main>
-      <header className="site-header">
-        <Link className="brand" href="#top" aria-label="DCNHS Alumni home">
-          <Image className="brand-logo" src="/branding/dcnhsaai-logo.svg" alt="DCNHS Alumni Association seal" width={52} height={52} priority />
-          <span>
-            <strong>DCNHS Alumni</strong>
-            <small>Association, Inc.</small>
-          </span>
-        </Link>
-        <nav aria-label="Main navigation">
-          <Link href="/about">About Us</Link>
-          <AssociationDropdown>
-            {associationLinks.map((item) => <Link key={item.href} href={item.href}>{item.title}</Link>)}
-          </AssociationDropdown>
-          <Link href="/alumni-directory">Alumni Directory</Link>
-          <Link className="button button-small donate-button" href="/donate">Donate</Link>
-        </nav>
-        <div className="header-actions">
-          <Link className="text-link" href="/login">Sign in</Link>
-          <Link className="button button-small" href="/register">Join the registry</Link>
-        </div>
-      </header>
+      <PublicHeader>
+        <AssociationDropdown>
+          {associationLinks.map((item) => <Link key={item.href} href={item.href}>{item.title}</Link>)}
+        </AssociationDropdown>
+        <Link href="/alumni-directory">Alumni Directory</Link>
+        <Link className="button button-small donate-button" href="/donate">Donate</Link>
+      </PublicHeader>
 
       <HeroCarousel>
         <div className="hero-copy">
