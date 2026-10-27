@@ -2,13 +2,47 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const pages = {
+type AssociationDocument = {
+  title: string;
+  description: string;
+  href: string;
+};
+
+type AssociationPage = {
+  eyebrow: string;
+  title: string;
+  intro: string;
+  emptyTitle: string;
+  emptyText: string;
+  documents?: AssociationDocument[];
+};
+
+const pages: Record<string, AssociationPage> = {
   "management-reports": {
     eyebrow: "Transparency and accountability",
     title: "Management Reports",
     intro: "A central place for approved reports on the association’s operations, accomplishments, finances, and organizational progress.",
     emptyTitle: "Reports will be available here",
     emptyText: "The association will confirm which reports are intended for public access and which should be restricted to authorized members.",
+  },
+  "association-documents": {
+    eyebrow: "Official association records",
+    title: "Association Documents",
+    intro: "Access official registration and compliance documents of the Davao City National High School Alumni Association, Inc.",
+    emptyTitle: "Official documents",
+    emptyText: "View or download the association’s current registration and tax compliance records.",
+    documents: [
+      {
+        title: "SEC Certificate of Incorporation",
+        description: "Official SEC Certificate of Incorporation for the DCNHS Alumni Association, Inc.",
+        href: "/documents/sec-coi-dcnhsaai.pdf",
+      },
+      {
+        title: "BIR Form 2023 COR",
+        description: "BIR Certificate of Registration document for signed-in alumni and officers.",
+        href: "/api/documents/bir-form-2023-cor",
+      },
+    ],
   },
   "alumni-projects": {
     eyebrow: "Impact made together",
@@ -62,16 +96,32 @@ export default async function AssociationPage({ params }: { params: Promise<{ sl
       <section className="content-body">
         <div className="content-empty">
           <span className="empty-seal"><Image src="/branding/dcnhsaai-logo.svg" alt="" width={80} height={80} /></span>
-          <p className="prototype-label">Presentation prototype</p>
+          {!page.documents && <p className="prototype-label">Presentation prototype</p>}
           <h2>{page.emptyTitle}</h2>
           <p>{page.emptyText}</p>
-          <Link href="/">Return to homepage <span>→</span></Link>
+          {page.documents ? (
+            <div className="document-list">
+              {page.documents.map((document) => (
+                <div className="document-card" key={document.href}>
+                  <div>
+                    <h3>{document.title}</h3>
+                    <p>{document.description}</p>
+                  </div>
+                  <a href={document.href} target="_blank" rel="noreferrer">
+                    View document <span>↗</span>
+                  </a>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <Link href="/">Return to homepage <span>→</span></Link>
+          )}
         </div>
         <aside>
           <p className="eyebrow gold">About this page</p>
           <h3>Officer-managed content</h3>
           <p>In the completed system, authorized officers will manage this page through a protected administration dashboard.</p>
-          <div className="status-card"><span>Status</span><strong>Awaiting official content</strong></div>
+          <div className="status-card"><span>Status</span><strong>{page.documents ? "Documents published" : "Awaiting official content"}</strong></div>
         </aside>
       </section>
 

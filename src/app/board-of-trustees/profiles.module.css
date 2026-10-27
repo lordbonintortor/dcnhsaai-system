@@ -32,6 +32,7 @@
 .profileIntro, .biography { grid-column: 2; }
 .profileAside { grid-column: 1; grid-row: 1 / span 2; min-width: 0; max-width: 420px; }
 .profilePortrait { border: 1px solid #dce2d5; }
+.bullet { padding-left: 24px; }
 .profileFacts { padding: 26px; background: var(--cream); border-top: 3px solid var(--gold); }
 .profileFacts dl { display: grid; grid-template-columns: 1.2fr .8fr; gap: 16px; margin: 0 0 24px; }
 .profileFacts dt, .profileFacts > p { margin: 0 0 9px; color: #69745c; font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }

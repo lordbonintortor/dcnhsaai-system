@@ -16,7 +16,7 @@ const statuses = Object.keys(verificationLabels) as VerificationStatus[];
 const searchable = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 
 export default function OfficerDashboard() {
-  const { officer, ready, error } = useAccount();
+  const { profile, officer, ready, error } = useAccount();
   const [signOutError, setSignOutError] = useState("");
   const [signingOut, setSigningOut] = useState(false);
   const router = useRouter();
@@ -35,7 +35,13 @@ export default function OfficerDashboard() {
     <div className={styles.portal}>
       <header className={styles.header}>
         <Link className={`brand ${styles.brand}`} href="/"><Image className="brand-logo" src="/branding/dcnhsaai-logo.svg" alt="DCNHS Alumni Association seal" width={48} height={48} loading="eager" /><span><strong>DCNHS Alumni</strong><small>Officer portal</small></span></Link>
-        <div className={styles.headerActions}><span>{officer.name}</span><button type="button" onClick={signOut} disabled={signingOut}>{signingOut ? "Signing out…" : "Sign out"}</button>{signOutError && <p role="alert">{signOutError}</p>}</div>
+        <div className={styles.headerActions}>
+          {profile && <Link className={styles.alumniPortalButton} href="/dashboard">Alumni portal <span aria-hidden="true">→</span></Link>}
+          {profile && <ProfileAvatar profile={profile} size={38} />}
+          <span className={styles.accountName}>{profile ? `${profile.firstName} ${profile.lastName}` : officer.name}</span>
+          <button type="button" onClick={signOut} disabled={signingOut}>{signingOut ? "Signing out…" : "Sign out"}</button>
+          {signOutError && <p role="alert">{signOutError}</p>}
+        </div>
       </header>
       <main className={styles.main}>
         <div className={styles.heading}><div><p className={styles.eyebrow}>Alumni registry · Officer review</p><h1>Every graduate, accounted for.</h1><p>Review graduate details, approve applications, request further details, or reject applications.</p></div></div>

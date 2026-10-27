@@ -25,6 +25,10 @@ const associationLinks = [
     href: "/management-reports",
   },
   {
+    title: "Association Documents",
+    href: "/association-documents",
+  },
+  {
     title: "Outstanding Student and Alumni Awardees",
     href: "/outstanding-student-and-alumni-awardees",
   },
@@ -113,7 +117,7 @@ export default function Home() {
             <a href={association.contact.phoneHref}>{association.contact.phone}</a>
           </div>
         </div>
-        <div className="footer-bottom"><span>Prototype for review · 2026</span><span>Privacy policy · Terms</span></div>
+        <div className="footer-bottom"><span>© 2026 DCNHS Alumni Association, Inc.</span><span>Privacy policy · Terms</span></div>
       </footer>
     </main>
   );

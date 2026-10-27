@@ -11,7 +11,7 @@ export default function PasswordField({ id, label, value, onChange, autoComplete
     <div className="password-field">
       <label htmlFor={id}>{label}</label>
       <div className="password-control">
-        <input id={id} name={id} type={visible ? "text" : "password"} autoComplete={autoComplete} minLength={minLength} value={value} onChange={event => onChange(event.target.value)} required />
+        <input id={id} name={id} type={visible ? "text" : "password"} autoComplete={autoComplete} minLength={minLength} placeholder="Enter your password" value={value} onChange={event => onChange(event.target.value)} required />
         <button type="button" onClick={() => setVisible(!visible)} aria-label={`${visible ? "Hide" : "Show"} ${label.replace(" *", "").toLowerCase()}`} aria-pressed={visible}>{visible ? "Hide" : "Show"}</button>
       </div>
     </div>

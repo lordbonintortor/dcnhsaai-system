@@ -6,7 +6,7 @@ import styles from "./profiles.module.css";
 
 export const metadata: Metadata = {
   title: "Board of Trustees | DCNHS Alumni Association, Inc.",
-  description: "Meet the DCNHSAAI trustees featured in the association’s 2026 biographies: Niceforo V. Solis Jr., Merle G. Bobilles, and Ruth Ulac Arancel.",
+  description: "Meet the 2026 DCNHSAAI Board of Trustees and officers.",
 };
 
 export default function BoardPage() {
@@ -17,7 +17,7 @@ export default function BoardPage() {
           <p className="eyebrow">Leadership and governance</p>
           <h1 id="board-title">Board of Trustees</h1>
           <p>City High alumni bringing their experience, care, and commitment to the community that shaped them.</p>
-          <span className={styles.edition}>2026 leadership profiles</span>
+          <span className={styles.edition}>2026 board and officers</span>
         </div>
       </section>
 
@@ -44,7 +44,6 @@ export default function BoardPage() {
             </article>
           ))}
         </div>
-        <p className={styles.source}>Profiles from the association’s 2026 Board of Trustees brief biographies.</p>
       </section>
 
       <section className={styles.historyCallout}>

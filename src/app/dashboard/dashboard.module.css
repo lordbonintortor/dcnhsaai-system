@@ -20,6 +20,8 @@
 .workspace { min-width: 0; }
 .topbar { min-height: 80px; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 40px; border-bottom: 1px solid #e1e6db; background: var(--paper); font-size: 12px; color: #68766b; }
 .topbar > div { display: flex; align-items: center; gap: 18px; }
+.officerLink { color: var(--navy); font-size: 11px; font-weight: 700; }
+.officerLink:hover { color: #8a7100; }
 .demoBadge { color: #766115; background: #f5edc6; padding: 6px 10px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
 .main { max-width: 1440px; padding: 35px 40px 45px; margin: 0 auto; }
 .welcome { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 42px; background: var(--navy); color: white; overflow: hidden; }

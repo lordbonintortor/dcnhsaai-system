@@ -24,7 +24,8 @@ export default function AlumniFields({ value, onChange }: {
           <label>First name *<input name="firstName" autoComplete="given-name" placeholder="First name" value={value.firstName} onChange={e => change("firstName", e.target.value)} required /></label>
           <label>Middle or maiden name<input name="middleName" autoComplete="additional-name" placeholder="Optional" value={value.middleName} onChange={e => change("middleName", e.target.value)} /></label>
           <label>Last name *<input name="lastName" autoComplete="family-name" placeholder="Last name" value={value.lastName} onChange={e => change("lastName", e.target.value)} required /></label>
-          <label>Mobile number (optional)<input name="mobile" type="tel" autoComplete="tel" placeholder="+63 9XX XXX XXXX" value={value.mobile} onChange={e => change("mobile", e.target.value)} /></label>
+          <label>Email address *<input name="email" type="email" autoComplete="email" placeholder="you@example.com" value={value.email} onChange={e => change("email", e.target.value)} required /></label>
+          <label>Mobile number<input name="mobile" type="tel" autoComplete="tel" placeholder="09 XX XXX XXXX (optional)" value={value.mobile} onChange={e => change("mobile", e.target.value)} /></label>
         </div>
       </fieldset>
       <fieldset>

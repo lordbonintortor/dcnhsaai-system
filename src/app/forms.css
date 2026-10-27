@@ -41,7 +41,8 @@ input:focus,textarea:focus{box-shadow:0 0 0 3px rgba(240,206,36,.18)}
 .account-photo-preview{display:flex;align-items:center;gap:16px;margin-top:30px;font-size:12px;color:#6d7b66}
 .password-field>label{display:block;font-size:12px;font-weight:700;color:#344d5c;margin-bottom:8px}
 .password-control{position:relative}
-.password-control input{padding-right:65px;font-size:14px}
+.password-control input{padding-right:65px;font-size:12px;font-weight:700;color:#344d5c}
+.password-control input::placeholder{font:inherit;color:#8f9d94;opacity:1}
 .password-control button{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:#786310;padding:8px;font-size:11px;font-weight:700;cursor:pointer}
 .registration-success{max-width:660px;margin:0 auto;padding:25px 0 20px}
 .registration-success>p:not(.step-label){color:#6f7b66;font-size:14px;line-height:1.7}

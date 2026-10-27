@@ -64,7 +64,7 @@ export async function requireOfficer(client: SupabaseClient) {
 export function detailsInput(input: unknown): ProfileDetails {
   if (!input || typeof input !== "object" || Array.isArray(input)) throw new ApiError("Enter your alumni information.");
   const raw = input as Record<string, unknown>;
-  const fields = ["batchYear", "section", "adviser", "firstName", "middleName", "lastName", "mobile", "otherProfession", "employers"];
+  const fields = ["batchYear", "section", "adviser", "firstName", "middleName", "lastName", "email", "mobile", "otherProfession", "employers"];
   for (const field of fields) {
     if (typeof raw[field] !== "string" || raw[field].length > (field === "employers" ? 2000 : 200)) throw new ApiError("Check your alumni information. A field is missing or too long.");
   }
@@ -144,7 +144,7 @@ export async function profilesFor(client: SupabaseClient, id?: string): Promise<
     for (const photo of data) if (photo.path && photo.signedUrl) photos.set(photo.path, photo.signedUrl);
   }
   return rows.map(row => ({
-    ...row.details, username: row.username, id: row.id, verification: row.verification,
+    ...row.details, email: row.details.email ?? "", username: row.username, id: row.id, verification: row.verification,
     createdAt: row.created_at, updatedAt: row.updated_at, version: row.version,
     photoDataUrl: row.photo_path ? photos.get(row.photo_path) ?? "" : "",
     reviewHistory: history.filter(entry => entry.applicant_id === row.id).map(entry => ({

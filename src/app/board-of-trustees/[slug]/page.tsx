@@ -31,7 +31,7 @@ export default async function TrusteeProfile({ params }: ProfileProps) {
     <main className={styles.profilePage}>
       <div className={styles.breadcrumb}>
         <Link href="/board-of-trustees">← All trustee profiles</Link>
-        <span>2026 leadership profile</span>
+        <span>2026 board and officers</span>
       </div>
       <article className={styles.profile} aria-labelledby="profile-name">
         <header className={styles.profileIntro}>
@@ -51,8 +51,7 @@ export default async function TrusteeProfile({ params }: ProfileProps) {
         </aside>
         <section className={styles.biography} aria-labelledby="biography-title">
           <h2 id="biography-title">A life of experience and service.</h2>
-          {trustee.biography.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-          <p className={styles.source}>Based on the association’s 2026 Board of Trustees brief biography.</p>
+          {trustee.biography.map((paragraph) => <p className={paragraph.startsWith("•") ? styles.bullet : undefined} key={paragraph}>{paragraph}</p>)}
         </section>
       </article>
       <section className={styles.moreProfiles} aria-labelledby="more-profiles-title">

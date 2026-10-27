@@ -19,7 +19,7 @@ export function useAlumniProfile() {
 }
 
 export default function DashboardShell({ children }: { children: ReactNode }) {
-  const { profile, ready, error } = useAccount();
+  const { profile, officer, ready, error } = useAccount();
   const [signOutError, setSignOutError] = useState("");
   const [signingOut, setSigningOut] = useState(false);
   const pathname = usePathname();
@@ -51,13 +51,14 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
             <Link href="/dashboard/application" aria-current={pathname === "/dashboard/application" ? "page" : undefined}><span aria-hidden="true">✓</span> Application status</Link>
             <Link href="/dashboard/directory" aria-current={inDirectory ? "page" : undefined}><span aria-hidden="true">⌕</span> Alumni directory</Link>
             <Link href="/dashboard/profile" aria-current={pathname === "/dashboard/profile" ? "page" : undefined}><span aria-hidden="true">◎</span> My profile</Link>
+            {officer && <Link href="/admin"><span aria-hidden="true">⚙</span> Officer dashboard</Link>}
             <Link href="/alumni-association-events"><span aria-hidden="true">◷</span> Alumni activities</Link>
             <Link href="/"><span aria-hidden="true">↗</span> Public website</Link>
           </nav>
           <div className={styles.sidebarBottom}><p><strong>{profile.firstName} {profile.lastName}</strong><span>Batch {profile.batchYear}</span></p><button type="button" onClick={signOut} disabled={signingOut}>{signingOut ? "Signing out…" : "Sign out"} <span aria-hidden="true">→</span></button>{signOutError && <p role="alert">{signOutError}</p>}</div>
         </aside>
         <div className={styles.workspace}>
-          <header className={styles.topbar}><span>{pathname === "/dashboard/application" ? "Application status" : pathname === "/dashboard/profile" ? "My profile" : inDirectory ? "Alumni directory" : "Dashboard overview"}</span><div><ProfileAvatar profile={profile} size={36} /></div></header>
+          <header className={styles.topbar}><span>{pathname === "/dashboard/application" ? "Application status" : pathname === "/dashboard/profile" ? "My profile" : inDirectory ? "Alumni directory" : "Dashboard overview"}</span><div>{officer && <Link className={styles.officerLink} href="/admin">Officer access</Link>}<ProfileAvatar profile={profile} size={36} /></div></header>
           <main className={styles.main}>{children}</main>
           <div className={styles.footer}>DCNHS Alumni Association, Inc. <span>Alumni portal</span></div>
         </div>
