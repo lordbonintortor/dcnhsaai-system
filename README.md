@@ -2,7 +2,7 @@
 
 Website and alumni registry for the Davao City National High School Alumni Association, Inc.
 
-Deployment target: Vercel for now, with Hostinger planned later. Both use the same Supabase project. Local Vercel build configuration is prepared; deployment and account/team setup are pending. See [deployment steps and plan requirements](docs/DEPLOYMENT.md).
+Deployment target: Render's free tier for temporary testing, with Hostinger planned later. Both use the same Supabase project. `render.yaml` defines a free Node.js web service; account connection and deployment are pending. See [deployment steps](docs/DEPLOYMENT.md).
 
 ## Current development — October 26, 2026
 

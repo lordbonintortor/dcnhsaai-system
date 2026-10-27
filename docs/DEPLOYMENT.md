@@ -1,4 +1,4 @@
-# Supabase deployment: Vercel first, Hostinger later
+# Supabase deployment: Render first, Hostinger later
 
 This replaces browser-only accounts with Supabase Auth, PostgreSQL records, and private photo storage. The current checkout is not deployed until the service account setup and live verification below are completed.
 
@@ -62,19 +62,27 @@ npm run build -- --webpack
 
 The database tests execute the actual migration in embedded PostgreSQL with minimal Supabase Auth/Storage schema fixtures. Run `TEST_PREVIOUS_USERNAME_MIGRATION=1 node --conditions=react-server --test tests/registry.test.mjs` as well to check upgrading from the optional-email version. They check signup validation, row-level access, role escalation, decision messages/history, stale edits, resubmission, directory projections, and private-photo rules. They do not replace integration checks against Supabase Auth and Storage.
 
-## 3. Temporary Vercel deployment
+## 3. Temporary Render deployment
 
-The user selected Vercel for the initial deployment, with a later move to paid Hostinger hosting. The same Supabase project provides Auth, database records, and photos on both hosts. No data migration or new user registration is needed when changing the web host.
+The user selected Render's free tier for temporary testing after considering Vercel's plan restrictions. The same Supabase project provides Auth, database records, and photos on Render and later on Hostinger. No data migration or new user registration is needed when changing the web host.
 
-Check plan eligibility before selecting a free plan. Vercel's [Hobby fair-use rules](https://vercel.com/docs/limits/fair-use-guidelines#commercial-usage) limit it to personal, non-commercial use and include paid development in the definition of commercial work. A paid client project should use an appropriate Pro team. The [free Pro trial](https://vercel.com/docs/plans/pro-plan/trials) lasts up to 14 days or until trial limits are reached, is limited to one per account, and only charges after the trial if a payment method is added. This is a temporary option, not ongoing free hosting. Plan the move to Hostinger or another eligible plan before trial expiry; reverting to Hobby does not change its use restrictions. No paid plan has been authorized or activated.
+[Render's free web services](https://render.com/docs/free) sleep after 15 minutes without incoming traffic and take approximately one minute to wake up. Free services have usage limits and are intended for previews/testing. All persistent application data is in Supabase, so Render restarts do not erase accounts or uploaded photos. No Render database or disk is required.
 
-1. Publish the reviewed application source to the GitHub repository. The current checkout includes uncommitted backend changes; importing the older remote commit alone will not deploy this implementation. Keep `.env.local` and business documents out of the deployment.
-2. In Vercel, select the intended eligible team and import `lordbonintortor/dcnhsaai-system`. Use the repository root and the Next.js framework preset. Select Node.js 24. `vercel.json` sets the build command to the locally verified `npm run build -- --webpack`; leave the framework's output directory default.
-3. Add `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, and `APP_URL` in the project's environment-variable settings. Copy the Supabase values privately from the local configuration. Set `APP_URL` to the exact HTTPS project domain assigned by Vercel (for example, `https://YOUR-PROJECT.vercel.app`), without a trailing path. The example is not a confirmed deployment URL. Keep credentials scoped to the intended environment; this first deployment does not need authenticated branch previews sharing the live database.
-4. Deploy. If Vercel assigns a different domain, correct `APP_URL` and redeploy before testing account forms. Requests from alternate deployment URLs will fail the origin check when `APP_URL` points at the canonical project domain. Keep local `.env.local` set to `http://localhost:3000` for local development.
-5. Set Supabase's Auth Site URL to the canonical Vercel origin. Leave email confirmation disabled. Check `/api/health`, then repeat account, officer, directory, and photo checks on that exact URL. A successful build alone does not verify the runtime environment variables.
+### Recommended: deploy the Blueprint
 
-Vercel is not connected to this assistant yet. No Vercel project, subscription, or deployment has been created. The local Vercel configuration is prepared; repository publication and account/team selection remain pending.
+1. Sign in at [Render](https://dashboard.render.com/) using GitHub. Connect the Render plugin if the assistant will manage deployment.
+2. Choose **New → Blueprint**, connect `lordbonintortor/dcnhsaai-system`, select `main`, and use the root `render.yaml` file. The application source is committed; ensure the selected commit also contains the Render configuration.
+3. Confirm the Blueprint creates one **Free** Node.js web service in Singapore. Supply the three requested values privately from `.env.local`: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, and `SUPABASE_SECRET_KEY`. These credentials are not stored in `render.yaml` or committed to Git.
+4. Create the Blueprint and let the service build. The start command sets `APP_URL` from Render's automatically assigned `RENDER_EXTERNAL_URL`, unless a custom `APP_URL` was explicitly configured. Leave `APP_URL` unset in Render for the initial onrender.com address; do not copy the local `http://localhost:3000` value. This sets the exact trusted origin without accepting arbitrary request headers.
+5. Open the assigned HTTPS URL and check `/api/health` for HTTP 200 and `{"status":"ok"}`. Update Supabase's Auth Site URL to that same origin and keep email confirmation disabled. Complete the live checks below, including photo upload, before inviting users.
+
+The Blueprint uses Node.js 24, `npm ci --include=dev && npm run build -- --webpack`, and `APP_URL="${APP_URL:-$RENDER_EXTERNAL_URL}" npm run start -- --hostname 0.0.0.0`. Next.js reads Render's supplied `PORT`. `/api/health` verifies the backend connection for deployment health checks. New commits to the linked branch trigger deployment.
+
+### Manual alternative
+
+Choose **New → Web Service**, connect the same repository/branch, select Node and Singapore, and select the **Free** instance. Use the Blueprint's build/start commands and `/api/health` health-check path. Set `NODE_VERSION=24` and the three Supabase environment variables. Then deploy and follow steps 4–5 above. This is a full Node.js web service because account routes require a running backend ([Render's Next.js guide](https://render.com/docs/deploy-nextjs-app)).
+
+Render account connection, service creation, and public URL verification are pending. No paid hosting has been activated.
 
 ## 4. Later move to Hostinger
 
@@ -92,7 +100,7 @@ For a managed Node.js web app:
 6. Ensure any hosting/CDN cache bypasses `/api/*`; these responses also send `Cache-Control: private, no-store` and `Vary: Cookie`. Never cache authenticated JSON or responses setting authentication cookies.
 7. Deploy, inspect runtime logs, and check `/api/health` on the live URL before inviting users.
 
-When moving from Vercel, deploy the same reviewed source and Supabase environment values to Hostinger, set `APP_URL` and Supabase's Auth Site URL to the new canonical domain, and verify the account flows before switching domain traffic. Users keep their usernames, passwords, status, and photos; they may need to sign in again on a different domain. Retire the old Vercel deployment after the new site has passed checks and the switch is complete. The Hostinger app can use the provider-neutral `npm run build -- --webpack` and `npm run start`; it does not depend on Vercel APIs.
+When moving from Render, deploy the same reviewed source and Supabase environment values to Hostinger, set `APP_URL` and Supabase's Auth Site URL to the new canonical domain, and verify the account flows before switching domain traffic. Users keep their usernames, passwords, status, and photos; they may need to sign in again on a different domain. Retire the old Render deployment after the new site has passed checks and the switch is complete. The Hostinger app can use `npm run build -- --webpack` and `npm run start`; it does not depend on Render APIs.
 
 ## 5. Live verification before opening registrations
 

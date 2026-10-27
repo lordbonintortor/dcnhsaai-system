@@ -1,0 +1,20 @@
+# Existing Supabase handles Auth, database records, and uploaded photos.
+services:
+  - type: web
+    name: dcnhsaai-system
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm ci --include=dev && npm run build -- --webpack
+    startCommand: APP_URL="${APP_URL:-$RENDER_EXTERNAL_URL}" npm run start -- --hostname 0.0.0.0
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
