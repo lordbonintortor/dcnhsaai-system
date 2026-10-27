@@ -4,6 +4,8 @@ import { association } from "@/lib/association";
 import HeroCarousel from "./hero-carousel";
 import AssociationDropdown from "./association-dropdown";
 import PublicHeader from "./public-header";
+import { tionkoDayActivity } from "@/lib/activity-post";
+import { alumniProjects } from "@/lib/alumni-projects";
 
 const Arrow = () => <span aria-hidden="true">↗</span>;
 
@@ -82,9 +84,9 @@ export default function Home() {
       <section className="registry-callout section">
         <div className="registry-pattern" aria-hidden="true"><span>1922</span></div>
         <div className="registry-copy">
-          <p className="eyebrow">The alumni registry</p>
-          <h2>Your chapter belongs in our shared story.</h2>
-          <p>Register your alumni profile to help the association build a verified, secure, and connected community.</p>
+          <p className="eyebrow">Join the alumni registry</p>
+          <h2>Keep your City High connection alive.</h2>
+          <p>Register your profile to reconnect with classmates, discover association activities, and help build a stronger alumni community.</p>
           <div className="check-row"><span>✓ Batch-based profiles</span><span>✓ Officer verification</span><span>✓ Privacy-first</span></div>
           <Link className="button light" href="/register">Begin registration <Arrow /></Link>
         </div>
@@ -93,13 +95,23 @@ export default function Home() {
       <section className="updates section" id="updates">
         <div className="section-heading">
           <div><p className="eyebrow gold">From the association</p><h2>News &amp; activities.</h2></div>
-          <span className="prototype-note">Sample content for presentation</span>
+          <p>Explore the milestones, programs, and projects that continue to bring the City High community together.</p>
         </div>
         <div className="news-grid">
-          <article className="news-feature"><div className="news-image image-one"><span>COMING SOON</span></div><p className="tag">Association activity</p><h3>Building a stronger alumni community, one batch at a time</h3><p>Official activity details will be published here by association officers.</p></article>
-          <article><div className="news-image image-two"/><p className="tag">Alumni activity</p><h3>Annual homecoming</h3><p>Dates and event information to be confirmed.</p></article>
-          <article><div className="news-image image-three"/><p className="tag">Projects</p><h3>Supporting future generations</h3><p>Project and benefactor stories will appear here.</p></article>
+          <Link className="news-card news-feature" href="/alumni-association-events">
+            <div className="news-image news-photo" style={{ backgroundImage: `url("${tionkoDayActivity.images[0].src}")` }} />
+            <div className="news-card-content"><p className="tag">Association activity · {tionkoDayActivity.date}</p><h3>{tionkoDayActivity.title}</h3><p>{tionkoDayActivity.summary}</p><span className="news-card-link">Read activity <Arrow /></span></div>
+          </Link>
+          <Link className="news-card" href="/alumni-projects/2025">
+            <div className="news-image image-two"><span className="news-year">2025</span></div>
+            <div className="news-card-content"><p className="tag">Recognition program</p><h3>{alumniProjects["2025"][0].title}</h3><p>Honoring alumni and students whose contributions inspire the next generation.</p><span className="news-card-link">View project <Arrow /></span></div>
+          </Link>
+          <Link className="news-card" href="/alumni-projects/2024">
+            <div className="news-image image-three"><span className="news-year">2024</span></div>
+            <div className="news-card-content"><p className="tag">Alumni projects</p><h3>{alumniProjects["2024"].length} projects for City High</h3><p>Explore the monument, solar lighting, SSG building repair, and alumni website initiatives.</p><span className="news-card-link">Explore projects <Arrow /></span></div>
+          </Link>
         </div>
+        <div className="updates-footer"><p>Explore the association’s activities and projects.</p><Link className="secondary-link dark" href="/alumni-association-events">View all activities <Arrow /></Link></div>
       </section>
 
       <footer id="contact">
@@ -117,7 +129,7 @@ export default function Home() {
             <a href={association.contact.phoneHref}>{association.contact.phone}</a>
           </div>
         </div>
-        <div className="footer-bottom"><span>© 2026 DCNHS Alumni Association, Inc.</span><span>Privacy policy · Terms</span></div>
+        <div className="footer-bottom"><span>© 2026 DCNHS Alumni Association, Inc.</span><span><Link href="/privacy-policy">Privacy Policy</Link> · <Link href="/terms-of-use">Terms of Use</Link></span></div>
       </footer>
     </main>
   );

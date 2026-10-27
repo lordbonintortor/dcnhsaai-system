@@ -1,6 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { alumniProjects } from "@/lib/alumni-projects";
+import ActivityPost from "@/app/activity-post";
+import { tionkoDayActivity } from "@/lib/activity-post";
 
 type AssociationDocument = {
   title: string;
@@ -15,6 +18,9 @@ type AssociationPage = {
   emptyTitle: string;
   emptyText: string;
   documents?: AssociationDocument[];
+  reports?: AssociationDocument[];
+  projectYears?: string[];
+  activity?: typeof tionkoDayActivity;
 };
 
 const pages: Record<string, AssociationPage> = {
@@ -22,8 +28,20 @@ const pages: Record<string, AssociationPage> = {
     eyebrow: "Transparency and accountability",
     title: "Management Reports",
     intro: "A central place for approved reports on the association’s operations, accomplishments, finances, and organizational progress.",
-    emptyTitle: "Reports will be available here",
-    emptyText: "The association will confirm which reports are intended for public access and which should be restricted to authorized members.",
+    emptyTitle: "Financial reports",
+    emptyText: "Approved financial reports are available to authorized association officers.",
+    reports: [
+      {
+        title: "2025 Financial Report",
+        description: "Annual financial report of the DCNHS Alumni Association, Inc.",
+        href: "/api/documents/management-reports/2025-financial-report-dcnhsaai",
+      },
+      {
+        title: "Five-Year Financials (2021–2025)",
+        description: "Five-year financial report covering 2021 through 2025.",
+        href: "/api/documents/management-reports/5-year-financials-2021-2025",
+      },
+    ],
   },
   "association-documents": {
     eyebrow: "Official association records",
@@ -48,22 +66,24 @@ const pages: Record<string, AssociationPage> = {
     eyebrow: "Impact made together",
     title: "Alumni Projects",
     intro: "Discover projects led by alumni and the association, and recognize the individuals, batches, organizations, and partners who make this work possible.",
-    emptyTitle: "Project stories are coming soon",
-    emptyText: "Confirmed projects, outcomes, photographs, and benefactor acknowledgements will be added by authorized association officers.",
+    emptyTitle: "Projects by year",
+    emptyText: "Select a year to explore the projects completed by the Alumni Association.",
+    projectYears: Object.keys(alumniProjects).reverse(),
   },
   "alumni-association-events": {
     eyebrow: "Our community in action",
     title: "Alumni & Association Events",
     intro: "Stay connected through annual homecomings, batch reunions, general assemblies, seminars, charitable works, fund-raising activities, and other alumni and association gatherings.",
-    emptyTitle: "Community events are coming soon",
-    emptyText: "Upcoming and completed events from alumni batches and the association will appear here once their dates, details, and photographs are approved.",
+    emptyTitle: "Activity posts",
+    emptyText: "Read the association's activity posts, celebrations, and community events.",
+    activity: tionkoDayActivity,
   },
   "outstanding-student-and-alumni-awardees": {
     eyebrow: "Celebrating excellence",
     title: "Outstanding Student and Alumni Awardees",
     intro: "Honoring students and alumni whose achievements, leadership, and service inspire the wider City High community.",
     emptyTitle: "Awardee profiles are being prepared",
-    emptyText: "Official award categories, recipients, citations, photographs, and award years will be published after association approval.",
+    emptyText: "Recognizing students and alumni for achievement, leadership, and service.",
   },
 } as const;
 
@@ -96,12 +116,10 @@ export default async function AssociationPage({ params }: { params: Promise<{ sl
       <section className="content-body">
         <div className="content-empty">
           <span className="empty-seal"><Image src="/branding/dcnhsaai-logo.svg" alt="" width={80} height={80} /></span>
-          {!page.documents && <p className="prototype-label">Presentation prototype</p>}
-          <h2>{page.emptyTitle}</h2>
-          <p>{page.emptyText}</p>
-          {page.documents ? (
+          {!page.activity && <><h2>{page.emptyTitle}</h2><p>{page.emptyText}</p></>}
+          {page.documents || page.reports ? (
             <div className="document-list">
-              {page.documents.map((document) => (
+              {(page.documents ?? page.reports ?? []).map((document) => (
                 <div className="document-card" key={document.href}>
                   <div>
                     <h3>{document.title}</h3>
@@ -113,19 +131,37 @@ export default async function AssociationPage({ params }: { params: Promise<{ sl
                 </div>
               ))}
             </div>
+          ) : page.projectYears ? (
+            <div className="project-year-grid">
+              {page.projectYears.map((year) => (
+                <Link className="project-year-card" href={`/alumni-projects/${year}`} key={year}>
+                  <span className="project-year-label">Projects completed</span>
+                  <strong>{year}</strong>
+                  <span className="project-year-link">View projects <span aria-hidden="true">↗</span></span>
+                </Link>
+              ))}
+            </div>
+          ) : page.activity ? (
+            <article className="activity-article">
+              <p className="eyebrow gold">{page.activity.date}</p>
+              <h2>{page.activity.title}</h2>
+              <p className="activity-lead">{page.activity.summary}</p>
+              <p>{page.activity.body}</p>
+              <ActivityPost slug={page.activity.slug} images={page.activity.images} />
+            </article>
           ) : (
             <Link href="/">Return to homepage <span>→</span></Link>
           )}
         </div>
         <aside>
           <p className="eyebrow gold">About this page</p>
-          <h3>Officer-managed content</h3>
-          <p>In the completed system, authorized officers will manage this page through a protected administration dashboard.</p>
-          <div className="status-card"><span>Status</span><strong>{page.documents ? "Documents published" : "Awaiting official content"}</strong></div>
+          <h3>Association information</h3>
+          <p>Official information and updates from the DCNHS Alumni Association.</p>
+          <div className="status-card"><span>Access</span><strong>{page.documents ? "Public and member access" : page.reports ? "Officer access only" : "Public information"}</strong></div>
         </aside>
       </section>
 
-      <footer className="simple-footer"><span>DCNHS Alumni Association, Inc.</span><span>Prototype for review · 2026</span></footer>
+      <footer className="simple-footer"><span>DCNHS Alumni Association, Inc.</span><span>2026</span></footer>
     </main>
   );
 }

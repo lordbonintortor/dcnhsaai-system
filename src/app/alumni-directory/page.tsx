@@ -18,7 +18,7 @@ export default function PublicDirectoryPage() {
         <Link className="button button-small" href="/register">Join the registry</Link>
       </header>
       <div className={styles.publicContent}><DirectoryList /></div>
-      <footer className="simple-footer"><Link href="/">← Back to home</Link><span>DCNHS Alumni Association, Inc.</span><span>Prototype for review · 2026</span></footer>
+      <footer className="simple-footer"><Link href="/">← Back to home</Link><span>DCNHS Alumni Association, Inc.</span><span>2026</span></footer>
     </main>
   );
 }

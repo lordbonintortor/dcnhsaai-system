@@ -39,10 +39,10 @@ export default function DashboardOverview() {
       </div>
 
       <section className={styles.card}>
-        <div className={styles.cardHeading}><h2>From the community</h2><span className={styles.sampleLabel}>Sample updates</span></div>
+        <div className={styles.cardHeading}><h2>From the community</h2></div>
         <div className={styles.updates}>
-          <article><span className={styles.updateNumber} aria-hidden="true">01</span><div><p className={styles.updateTag}>Alumni activities</p><h3>Reconnect with your batch</h3><p>Homecomings and batch gatherings will appear here when the association publishes them.</p><details><summary>View preview <span aria-hidden="true">↓</span></summary><p>This sample shows where a future activity’s date, venue, and contact person will appear. No event is scheduled through this demo.</p><Link href="/alumni-association-events">Go to alumni activities →</Link></details></div></article>
-          <article><span className={styles.updateNumber} aria-hidden="true">02</span><div><p className={styles.updateTag}>Community projects</p><h3>Give back to City High</h3><p>Discover upcoming opportunities to share your time and experience with the community.</p><details><summary>View preview <span aria-hidden="true">↓</span></summary><p>Project announcements and participation details will be added by association officers. This is sample presentation content.</p><Link href="/alumni-projects">Explore alumni projects →</Link></details></div></article>
+          <article><span className={styles.updateNumber} aria-hidden="true">01</span><div><p className={styles.updateTag}>Alumni activities</p><h3>1st Tionko Day Celebration</h3><p>Read the story and view photos from the association’s first Tionko Day commemoration.</p><Link href="/alumni-association-events">Read the activity →</Link></div></article>
+          <article><span className={styles.updateNumber} aria-hidden="true">02</span><div><p className={styles.updateTag}>Community projects</p><h3>Projects for City High</h3><p>Explore the association’s 2024 and 2025 projects.</p><Link href="/alumni-projects">Explore alumni projects →</Link></div></article>
         </div>
       </section>
     </>

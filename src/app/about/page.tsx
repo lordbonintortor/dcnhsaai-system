@@ -80,7 +80,7 @@ export default function AboutPage() {
         <div><p className="eyebrow gold">Every batch belongs</p><h2 id="join-title">Be part of the next chapter.</h2><p>Reconnect with the community that shares your City High story.</p></div>
         <Link className="button" href="/register">Explore alumni registration <span aria-hidden="true">↗</span></Link>
       </section>
-      <footer className="simple-footer"><Link href="/">← Back to home</Link><span>DCNHS Alumni Association, Inc.</span><span>Prototype for review · 2026</span></footer>
+      <footer className="simple-footer"><Link href="/">← Back to home</Link><span>DCNHS Alumni Association, Inc.</span><span>2026</span></footer>
     </main>
   );
 }

@@ -16,7 +16,7 @@ export default function BoardLayout({ children }: Readonly<{ children: React.Rea
       <footer className="simple-footer">
         <Link href="/">← Back to home</Link>
         <span>DCNHS Alumni Association, Inc.</span>
-        <span>Prototype for review · 2026</span>
+        <span>2026</span>
       </footer>
     </div>
   );
