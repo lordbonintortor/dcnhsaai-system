@@ -1,0 +1,11 @@
+.env*
+.git
+.next
+node_modules
+*.log
+*.tsbuildinfo
+docs
+tests
+supabase
+PROGRESS-REPORT.md
+AGENTS.md

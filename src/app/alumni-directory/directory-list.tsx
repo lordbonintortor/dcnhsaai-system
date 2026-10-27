@@ -1,23 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useState } from "react";
 import { filterDirectory, type DirectoryEntry } from "@/lib/alumni-directory";
-import { demoDirectory } from "@/lib/demo-account";
-import { subscribeToDemoChanges } from "@/lib/use-demo-account";
+import { useResource } from "@/lib/use-account";
 import styles from "./directory.module.css";
-
-function snapshot(): string {
-  try { return JSON.stringify(demoDirectory()); }
-  catch { return "storage-error"; }
-}
-const serverSnapshot = () => undefined;
 
 export default function DirectoryList({ myBatchYear, memberProfiles = false }: { myBatchYear?: string; memberProfiles?: boolean }) {
   const [query, setQuery] = useState("");
   const [batchYear, setBatchYear] = useState("");
-  const stored = useSyncExternalStore<string | undefined>(subscribeToDemoChanges, snapshot, serverSnapshot);
-  const entries = useMemo<DirectoryEntry[]>(() => stored && stored !== "storage-error" ? JSON.parse(stored) : [], [stored]);
+  const { data, ready, error } = useResource<{ entries: DirectoryEntry[] }>("/api/directory");
+  const entries = data?.entries ?? [];
   const years = [...new Set([...entries.map(entry => entry.batchYear), ...(myBatchYear ? [myBatchYear] : []), ...(batchYear ? [batchYear] : [])])].sort((a, b) => Number(b) - Number(a));
   const results = filterDirectory(entries, query, batchYear);
   const hasFilters = Boolean(query || batchYear);
@@ -36,10 +29,10 @@ export default function DirectoryList({ myBatchYear, memberProfiles = false }: {
         {myBatchYear && <button type="button" className="button button-outline" onClick={() => { setQuery(""); setBatchYear(myBatchYear); }}>My batch · {myBatchYear}</button>}
       </form>
       <div className={styles.resultBar}>
-        <p role="status" aria-live="polite">{stored === undefined ? "Loading directory…" : stored === "storage-error" ? "Directory unavailable" : `${results.length} ${results.length === 1 ? "result" : "results"}${batchYear ? ` · Batch ${batchYear}` : " · All batches"}`}</p>
+        <p role="status" aria-live="polite">{!ready ? "Loading directory…" : error ? "Directory unavailable" : `${results.length} ${results.length === 1 ? "result" : "results"}${batchYear ? ` · Batch ${batchYear}` : " · All batches"}`}</p>
         {hasFilters && <button type="button" onClick={resetFilters}>Clear filters</button>}
       </div>
-      {stored === "storage-error" ? <p className="form-error" role="alert">The demo directory could not be loaded. Check that browser storage is available, then reload the page.</p> : stored !== undefined && results.length === 0 ? (
+      {error ? <p className="form-error" role="alert">{error}</p> : ready && results.length === 0 ? (
         <div className={styles.empty}><h2>No alumni found</h2><p>Try another name or batch year.</p><button type="button" className="button button-outline" onClick={resetFilters}>Show all alumni</button></div>
       ) : (
         <table className={styles.table}>
@@ -48,7 +41,7 @@ export default function DirectoryList({ myBatchYear, memberProfiles = false }: {
           <tbody>{results.map(entry => <tr key={entry.id}><td>{memberProfiles ? <Link className={styles.memberLink} href={`/dashboard/directory/${encodeURIComponent(entry.id)}`} aria-label={`View profile of ${entry.name}`} prefetch={false}>{entry.name}<span aria-hidden="true"> ↗</span></Link> : entry.name}</td><td>{entry.batchYear}</td></tr>)}</tbody>
         </table>
       )}
-      <p className={styles.note}>Demo directory · Sample entries and accounts saved on this browser.</p>
+      <p className={styles.note}>The directory lists approved alumni. Public listings show only names and batch years.</p>
     </section>
   );
 }

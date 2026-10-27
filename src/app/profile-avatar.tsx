@@ -10,7 +10,7 @@ export default function ProfileAvatar({ profile, size = 40 }: {
   const name = `${profile.firstName} ${profile.lastName}`.trim();
   const photo = profile.photoDataUrl;
   const dimensions = { width: size, height: size, fontSize: size * 0.35 };
-  if (photo && isProfilePhoto(photo)) {
+  if (photo && (photo.startsWith("https://") || photo.startsWith("/api/") || isProfilePhoto(photo))) {
     return <Image className={styles.avatar} style={dimensions} src={photo} width={size} height={size} unoptimized alt={name ? `Profile photo of ${name}` : "Profile photo preview"} />;
   }
   const initials = `${profile.firstName.trim()[0] ?? ""}${profile.lastName.trim()[0] ?? ""}`.toUpperCase();

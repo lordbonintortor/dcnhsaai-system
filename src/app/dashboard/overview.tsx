@@ -19,7 +19,7 @@ export default function DashboardOverview() {
       </section>
 
       <section className={styles.stats} aria-label="Your alumni information">
-        <div><span>Registry status</span><strong className={verified ? styles.verified : styles.pending}>{verificationLabels[profile.verification]}</strong><p>{verified ? "Graduate verification demonstration" : profile.verification === "needs_information" ? "Check the request below" : profile.verification === "rejected" ? "See the officer’s decision below" : "Awaiting a demo officer’s review"}</p></div>
+        <div><span>Registry status</span><strong className={verified ? styles.verified : styles.pending}>{verificationLabels[profile.verification]}</strong><p>{verified ? "Graduate application approved" : profile.verification === "needs_information" ? "Check the request below" : profile.verification === "rejected" ? "See the officer’s decision below" : "Awaiting officer review"}</p></div>
         <div><span>Batch year</span><strong>{profile.batchYear}</strong><p>{profile.section ? `Section ${profile.section}` : "Section not added yet"}</p></div>
         <div><span>Profession / occupation</span><strong className={styles.occupation}>{professionLabel(profile)}</strong><p>Your connection to the alumni network</p></div>
       </section>
@@ -30,7 +30,7 @@ export default function DashboardOverview() {
         <section className={styles.card}>
           <div className={styles.cardHeading}><h2>Your alumni profile</h2><Link href="/dashboard/profile">Edit profile <span aria-hidden="true">↗</span></Link></div>
           <div className={styles.profileIdentity}><ProfileAvatar profile={profile} size={58} /><div><h3>{profile.firstName} {profile.lastName}</h3><p>DCNHS · Batch {profile.batchYear}</p></div></div>
-          <dl className={styles.profileDetails}><div><dt>Email address</dt><dd>{profile.email}</dd></div><div><dt>Mobile number</dt><dd>{profile.mobile || "Not added"}</dd></div><div><dt>Section</dt><dd>{profile.section || "Not added"}</dd></div><div><dt>Employer / business</dt><dd>{profile.employers || "Not added"}</dd></div></dl>
+          <dl className={styles.profileDetails}><div><dt>Username</dt><dd>{profile.username || "Not assigned"}</dd></div><div><dt>Mobile number</dt><dd>{profile.mobile || "Not added"}</dd></div><div><dt>Section</dt><dd>{profile.section || "Not added"}</dd></div><div><dt>Employer / business</dt><dd>{profile.employers || "Not added"}</dd></div></dl>
         </section>
         <section className={`${styles.card} ${styles.nextSteps}`}>
           <p className={styles.eyebrow}>Make yourself at home</p><h2>Your next steps</h2>

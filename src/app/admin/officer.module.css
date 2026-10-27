@@ -63,6 +63,12 @@
 .detailsGrid dt { font-size: 10px; color: #7b8670; margin-bottom: 7px; }
 .detailsGrid dd { margin: 0; font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; white-space: pre-line; }
 .reviewForm { border-top: 1px solid #e1e7d9; padding-top: 28px; margin-top: 8px; }
+.decisionActions { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 12px; }
+.decisionActions button { cursor: pointer; font-size: 12px; }
+.decisionActions button:disabled { opacity: .5; cursor: default; }
+.messageDialog { position: fixed; inset: 0; margin: auto; width: min(540px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow-y: auto; border: 1px solid #cbd4c6; padding: 28px; color: var(--navy); background: white; }
+.messageDialog::backdrop { background: rgb(14 35 23 / 60%); }
+.messageDialog .reviewForm { border: 0; padding: 0; margin: 0; }
 .reviewForm h3, .history h3 { font-family: Georgia, serif; font-size: 26px; font-weight: 400; margin-bottom: 15px; }
 .reviewForm > p, .history > p { font-size: 12px; color: #75816c; line-height: 1.7; }
 .reviewForm > label { margin-top: 22px; }

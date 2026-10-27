@@ -3,37 +3,36 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import PasswordField from "@/app/password-field";
-import { DEMO_OFFICER_EMAIL, DEMO_OFFICER_PASSWORD, signInDemoOfficer } from "@/lib/demo-account";
-import { useDemoOfficer } from "@/lib/use-demo-officer";
+import { signIn } from "@/lib/account-api";
+import { useAccount } from "@/lib/use-account";
 
 export default function OfficerLoginForm() {
   const router = useRouter();
-  const { name, ready } = useDemoOfficer();
-  const [email, setEmail] = useState("");
+  const { officer, ready } = useAccount();
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => { if (ready && name) router.replace("/admin"); }, [ready, name, router]);
+  useEffect(() => { if (ready && officer) router.replace("/admin"); }, [ready, officer, router]);
 
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy) return;
     setError("");
     setBusy(true);
-    try { signInDemoOfficer(email, password); router.replace("/admin"); }
-    catch (cause) { setError(cause instanceof Error ? cause.message : "Unable to open the officer demo."); setBusy(false); }
+    try { await signIn(username, password, false, true); router.replace("/admin"); }
+    catch (cause) { setError(cause instanceof Error ? cause.message : "Unable to open the officer portal."); setBusy(false); }
   }
 
   return (
     <>
       <form onSubmit={submit}>
-        <label>Officer email<input name="email" type="email" autoComplete="username" value={email} onChange={event => setEmail(event.target.value)} required /></label>
+        <label>Officer username<input name="username" type="text" autoComplete="username" autoCapitalize="none" spellCheck={false} maxLength={30} value={username} onChange={event => setUsername(event.target.value)} required /></label>
         <PasswordField id="officerPassword" label="Password" value={password} onChange={setPassword} autoComplete="current-password" minLength={1} />
         {error && <p className="form-error" role="alert">{error}</p>}
         <button type="submit" className="button submit-button" disabled={busy}>{busy ? "Opening officer portal…" : "Sign in as officer"} <span aria-hidden="true">→</span></button>
       </form>
-      <details className="officer-demo-access"><summary>Demo access details</summary><p>Email: <code>{DEMO_OFFICER_EMAIL}</code><br />Password: <code>{DEMO_OFFICER_PASSWORD}</code></p><p>For fictional information only. This browser demo does not provide production access protection.</p></details>
     </>
   );
 }

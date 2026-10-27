@@ -10,7 +10,7 @@ export default function OfficerLoginPage() {
     <main className="login-page">
       <section className="login-card">
         <Link className="brand" href="/"><Image className="brand-logo" src="/branding/dcnhsaai-logo.svg" alt="DCNHS Alumni Association seal" width={58} height={58} loading="eager" /><span><strong>DCNHS Alumni</strong><small>Association, Inc.</small></span></Link>
-        <div><p className="eyebrow gold">Officer portal · Browser demo</p><h1>Review the next chapter.</h1><p>Sign in to try the graduate verification workflow with sample information.</p></div>
+        <div><p className="eyebrow gold">Officer portal</p><h1>Review the next chapter.</h1><p>Sign in with your authorized officer account to review graduate applications.</p></div>
         <OfficerLoginForm />
         <p className="login-foot">Looking for your alumni account? <Link href="/login">Alumni sign in</Link></p>
         <Link className="back-home" href="/">← Return to website</Link>

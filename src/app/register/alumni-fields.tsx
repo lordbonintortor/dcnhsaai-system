@@ -3,10 +3,9 @@
 import { type ProfileDetails } from "@/lib/alumni-profile";
 import ProfessionFields from "./profession-fields";
 
-export default function AlumniFields({ value, onChange, emailReadOnly = false }: {
+export default function AlumniFields({ value, onChange }: {
   value: ProfileDetails;
   onChange: (value: ProfileDetails) => void;
-  emailReadOnly?: boolean;
 }) {
   const change = (key: keyof ProfileDetails, next: string | string[]) => onChange({ ...value, [key]: next });
   return (
@@ -25,7 +24,6 @@ export default function AlumniFields({ value, onChange, emailReadOnly = false }:
           <label>First name *<input name="firstName" autoComplete="given-name" placeholder="First name" value={value.firstName} onChange={e => change("firstName", e.target.value)} required /></label>
           <label>Middle or maiden name<input name="middleName" autoComplete="additional-name" placeholder="Optional" value={value.middleName} onChange={e => change("middleName", e.target.value)} /></label>
           <label>Last name *<input name="lastName" autoComplete="family-name" placeholder="Last name" value={value.lastName} onChange={e => change("lastName", e.target.value)} required /></label>
-          <label>Email address *<input name="email" type="email" autoComplete="email" placeholder="you@example.com" value={value.email} onChange={e => change("email", e.target.value)} required readOnly={emailReadOnly} /><small>{emailReadOnly ? "Your demo sign-in email." : "Use a sample email for this browser demo."}</small></label>
           <label>Mobile number (optional)<input name="mobile" type="tel" autoComplete="tel" placeholder="+63 9XX XXX XXXX" value={value.mobile} onChange={e => change("mobile", e.target.value)} /></label>
         </div>
       </fieldset>

@@ -1,0 +1,14 @@
+.body { padding: 80px 8vw 100px; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 60px; }
+.body h2 { font-size: clamp(32px, 4vw, 46px); }
+.intro, .empty p, .contact p { color: #67776b; font-size: 14px; line-height: 1.8; }
+.accounts { display: grid; gap: 20px; }
+.account, .empty { padding: 28px; border: 1px solid #dce3dd; background: white; }
+.account h3, .empty h3, .contact h3 { font-family: Georgia, serif; font-size: 25px; font-weight: 400; }
+.account dl { margin: 0; display: grid; gap: 20px; }
+.account dt { font-size: 11px; color: #67776b; margin-bottom: 8px; }
+.account dd { margin: 0; line-height: 1.6; overflow-wrap: anywhere; }
+.number { font-size: 22px; font-variant-numeric: tabular-nums; }
+.contact { align-self: start; padding: 28px; background: var(--cream); min-width: 0; }
+.contact a { display: block; margin-top: 20px; font-size: 13px; text-decoration: underline; overflow-wrap: anywhere; }
+.body a:focus-visible { outline: 2px solid #8a7100; outline-offset: 4px; }
+@media (max-width: 800px) { .body { grid-template-columns: 1fr; padding: 50px 24px; gap: 28px; } }

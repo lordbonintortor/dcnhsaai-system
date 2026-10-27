@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signInDemo } from "@/lib/demo-account";
+import { signIn } from "@/lib/account-api";
 import PasswordField from "../password-field";
 
 export default function LoginForm() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -19,7 +20,7 @@ export default function LoginForm() {
     setBusy(true);
     setError("");
     try {
-      await signInDemo(email, password, remember);
+      await signIn(identifier, password, remember);
       router.replace("/dashboard");
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Unable to sign in. Please try again.");
@@ -32,10 +33,10 @@ export default function LoginForm() {
   return (
     <>
       <form onSubmit={submit}>
-        <label>Email address<input name="email" type="email" autoComplete="email" placeholder="you@example.com" value={email} onChange={event => setEmail(event.target.value)} required /></label>
+        <label>Username<input name="username" type="text" autoComplete="username" autoCapitalize="none" spellCheck={false} maxLength={30} placeholder="Your username" value={identifier} onChange={event => setIdentifier(event.target.value)} required /></label>
         <PasswordField id="loginPassword" label="Password" value={password} onChange={setPassword} autoComplete="current-password" minLength={1} />
         <div className="login-options"><label><input type="checkbox" checked={remember} onChange={event => setRemember(event.target.checked)} /> Remember me</label><button type="button" className="inline-button" aria-expanded={showHelp} onClick={() => setShowHelp(!showHelp)}>Forgot password?</button></div>
-        {showHelp && <p className="demo-note" role="status">Password recovery is not connected in this demo. You can register another demo account to continue.</p>}
+        {showHelp && <div className="demo-note" role="status"><p>For help accessing your account, <Link href="/about#contact">contact the association</Link>. An authorized officer will need to verify your identity before assisting with account recovery. Never share your password.</p><p>This page does not submit a recovery request.</p></div>}
         {error && <p className="form-error" role="alert">{error}</p>}
         <button type="submit" className="button submit-button" disabled={busy}>{busy ? "Signing in…" : "Sign in"} <span aria-hidden="true">→</span></button>
       </form>

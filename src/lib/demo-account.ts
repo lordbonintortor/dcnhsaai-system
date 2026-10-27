@@ -1,12 +1,20 @@
-import { type AlumniProfile, type ProfileDetails, normalizeProfile, profileError } from "./alumni-profile";
+import { type AlumniProfile as CurrentAlumniProfile, type ProfileDetails as CurrentProfileDetails, normalizeProfile as normalizeCurrentProfile, profileError } from "./alumni-profile";
 import { sampleDirectoryEntries, toDirectoryEntry, type DirectoryEntry } from "./alumni-directory";
 import { toMemberDirectoryProfile, type MemberDirectoryProfile } from "./member-directory";
 import { isProfilePhoto } from "./profile-photo";
-import { isApplicationReview, isVerificationStatus, reviewInputError, type ApplicationReview, type ReviewInput } from "./application-review";
+import { isApplicationReview, isVerificationStatus, type ApplicationReview, type OfficerDecision } from "./application-review";
+
+// Historical demo types are isolated from the production username-only account model.
+type ProfileDetails = CurrentProfileDetails & { email: string };
+type AlumniProfile = CurrentAlumniProfile & { email: string };
+const normalizeProfile = (details: ProfileDetails): ProfileDetails => ({ ...normalizeCurrentProfile(details), email: details.email.trim().toLowerCase() });
 
 // Frontend demonstration only. These browser records are not production authentication or evidence of graduation.
 export const DEMO_EMAIL = "alumni.demo@example.com";
 export const DEMO_PASSWORD = "CityHigh2026!";
+export const PENDING_DEMO_EMAIL = "pending.demo@example.com";
+export const PENDING_DEMO_PASSWORD = "Pending2026!";
+const PENDING_SAMPLE_KEY = "dcnhsaai.demo.pending-profile.v1";
 const ACCOUNTS_KEY = "dcnhsaai.demo.accounts.v1";
 const SESSION_KEY = "dcnhsaai.demo.session.v1";
 const SAMPLE_KEY = "dcnhsaai.demo.sample-profile.v1";
@@ -21,6 +29,13 @@ export const sampleProfile: AlumniProfile = {
   email: DEMO_EMAIL, batchYear: "2008", section: "Rizal", adviser: "",
   mobile: "", professions: ["Information Technology"], otherProfession: "",
   employers: "Sample Technology Studio", verification: "verified", createdAt: "2026-09-09T00:00:00.000Z",
+};
+
+export const pendingSampleProfile: AlumniProfile = {
+  id: "DEMO-PENDING-2015-001", firstName: "Jamie", middleName: "", lastName: "Reyes",
+  email: PENDING_DEMO_EMAIL, batchYear: "2015", section: "Sampaguita", adviser: "",
+  mobile: "", professions: ["Engineering"], otherProfession: "",
+  employers: "Fictional Engineering Studio", verification: "pending", createdAt: "2026-10-15T00:00:00.000Z",
 };
 
 type StoredAccount = { profile: AlumniProfile; salt: string; verifier: string };
@@ -74,7 +89,7 @@ async function passwordVerifier(password: string, salt: string) {
 
 export function emailExists(email: string) {
   const normalized = email.trim().toLowerCase();
-  return normalized === DEMO_EMAIL || readAccounts().some(account => account.profile.email === normalized);
+  return normalized === DEMO_EMAIL || normalized === PENDING_DEMO_EMAIL || readAccounts().some(account => account.profile.email === normalized);
 }
 
 export async function registerDemoAccount(details: ProfileDetails, password: string): Promise<AlumniProfile> {
@@ -100,23 +115,28 @@ export async function signInDemo(email: string, password: string, remember = fal
     startSession(sampleProfile.id, remember);
     return;
   }
+  if (normalized === PENDING_DEMO_EMAIL && password === PENDING_DEMO_PASSWORD) {
+    startSession(pendingSampleProfile.id, remember);
+    return;
+  }
   const account = readAccounts().find(item => item.profile.email === normalized);
   if (!account || await passwordVerifier(password, account.salt) !== account.verifier) throw new Error("The email or password does not match a demo account on this browser.");
   startSession(account.profile.id, remember);
 }
 
-function readSampleProfile(): AlumniProfile {
+function readSampleProfile(fallback: AlumniProfile = sampleProfile, key = SAMPLE_KEY): AlumniProfile {
   try {
-    const saved: unknown = JSON.parse(localStorage.getItem(SAMPLE_KEY) ?? "null");
-    if (isProfile(saved) && saved.id === sampleProfile.id) return saved;
+    const saved: unknown = JSON.parse(localStorage.getItem(key) ?? "null");
+    if (isProfile(saved) && saved.id === fallback.id) return saved;
   } catch { /* Use the original sample when a saved preview is invalid. */ }
-  return sampleProfile;
+  return fallback;
 }
 
 export function demoDirectory(): DirectoryEntry[] {
   return [
     ...sampleDirectoryEntries,
     toDirectoryEntry(readSampleProfile()),
+    toDirectoryEntry(readSampleProfile(pendingSampleProfile, PENDING_SAMPLE_KEY)),
     ...readAccounts().map(account => toDirectoryEntry(account.profile)),
   ].sort((a, b) => Number(b.batchYear) - Number(a.batchYear) || a.name.localeCompare(b.name));
 }
@@ -124,13 +144,14 @@ export function demoDirectory(): DirectoryEntry[] {
 export function currentDemoProfile(): AlumniProfile | null {
   const id = sessionStorage.getItem(SESSION_KEY) ?? localStorage.getItem(SESSION_KEY);
   if (id === sampleProfile.id) return readSampleProfile();
+  if (id === pendingSampleProfile.id) return readSampleProfile(pendingSampleProfile, PENDING_SAMPLE_KEY);
   return readAccounts().find(account => account.profile.id === id)?.profile ?? null;
 }
 
 export function demoMemberProfile(id: string): MemberDirectoryProfile | null {
   // This browser-demo guard must become server authorization with the real database.
   if (!currentDemoProfile()) throw new Error("Sign in to your alumni account to view member profiles.");
-  const profile = id === sampleProfile.id ? readSampleProfile() : readAccounts().find(account => account.profile.id === id)?.profile;
+  const profile = id === sampleProfile.id ? readSampleProfile() : id === pendingSampleProfile.id ? readSampleProfile(pendingSampleProfile, PENDING_SAMPLE_KEY) : readAccounts().find(account => account.profile.id === id)?.profile;
   if (profile) return toMemberDirectoryProfile(profile);
   const entry = sampleDirectoryEntries.find(item => item.id === id);
   // Name-only presentation samples have no additional personal information.
@@ -162,8 +183,9 @@ export function updateDemoProfile(details: ProfileDetails) {
 }
 
 function saveProfile(profile: AlumniProfile) {
-  if (profile.id === sampleProfile.id) {
-    try { localStorage.setItem(SAMPLE_KEY, JSON.stringify(profile)); }
+  if (profile.id === sampleProfile.id || profile.id === pendingSampleProfile.id) {
+    const key = profile.id === sampleProfile.id ? SAMPLE_KEY : PENDING_SAMPLE_KEY;
+    try { localStorage.setItem(key, JSON.stringify(profile)); }
     catch { throw new Error("Your browser could not save the demo profile. Check that browser storage is available and try again."); }
   } else {
     const accounts = readAccounts();
@@ -207,21 +229,21 @@ function requireDemoOfficer() {
 export function demoApplications(): AlumniProfile[] {
   requireDemoOfficer();
   // Never return the stored password verifiers to the review components.
-  return [readSampleProfile(), ...readAccounts().map(account => account.profile)]
+  return [readSampleProfile(), readSampleProfile(pendingSampleProfile, PENDING_SAMPLE_KEY), ...readAccounts().map(account => account.profile)]
     .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
 }
 
-export function reviewDemoApplication(expected: AlumniProfile, input: ReviewInput) {
+export function reviewDemoApplication(expected: AlumniProfile, status: OfficerDecision, message = "") {
   const officer = requireDemoOfficer();
-  const error = reviewInputError(input);
-  if (error) throw new Error(error);
+  if (!["verified", "needs_information", "rejected"].includes(status)) throw new Error("Choose a valid review decision.");
+  const applicantMessage = status === "verified" ? "" : message.trim();
+  if (status !== "verified" && (!applicantMessage || applicantMessage.length > 1000)) throw new Error("Enter a message to the applicant using 1–1,000 characters.");
   const current = demoApplications().find(profile => profile.id === expected.id);
   if (!current) throw new Error("This demo application is no longer available.");
   if (JSON.stringify(current) !== JSON.stringify(expected)) throw new Error("This application changed. Reopen it and check the latest details before saving your decision.");
-  if (input.status === current.verification) throw new Error("Choose a different status to record a new decision.");
+  if (current.verification === status) throw new Error("This application already has that status.");
   const updated = withReview(current, {
-    status: input.status, actor: "officer", reviewer: officer.name, message: input.message.trim(),
-    ...(input.status === "verified" ? { reference: input.reference, referenceNote: input.referenceNote!.trim() } : {}),
+    status, actor: "officer", reviewer: officer.name, message: applicantMessage,
   });
   saveProfile(updated);
   notify();

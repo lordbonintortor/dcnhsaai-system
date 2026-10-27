@@ -1,5 +1,7 @@
 # DCNHSAAI Website Progress Report
 
+**Latest development:** [October 26, 2026 — Supabase implementation and deployment preparation](docs/DEPLOYMENT.md). Server account APIs and the database migration are in the local source; external service configuration and production deployment are pending. [October 15, 2026 — application status without automated emails](docs/PROGRESS-2026-10-15.md) and the dated entries below describe earlier prototype milestones.
+
 **Date:** September 9, 2026  
 **Current stage:** Working frontend demo with registration, sign-in, alumni dashboard, profile photos, officer review, profile updates, and content integration. Backend development is scheduled for a later phase. September 25 additions are recorded at the end of this report.
 

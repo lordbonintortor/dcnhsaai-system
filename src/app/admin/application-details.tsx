@@ -1,39 +1,61 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import ProfileAvatar from "@/app/profile-avatar";
 import { professionLabel, type AlumniProfile } from "@/lib/alumni-profile";
-import { reviewDate, verificationLabels, verificationReferences, type VerificationReference, type VerificationStatus } from "@/lib/application-review";
-import { reviewDemoApplication } from "@/lib/demo-account";
+import { reviewDate, verificationLabels, type OfficerDecision } from "@/lib/application-review";
+import { reviewApplication } from "@/lib/account-api";
 import styles from "./officer.module.css";
 
 export default function ApplicationDetails({ profile, onSaved }: { profile: AlumniProfile; onSaved: () => void }) {
   const heading = useRef<HTMLHeadingElement>(null);
-  const [status, setStatus] = useState<VerificationStatus | "">("");
-  const [reference, setReference] = useState<VerificationReference | "">("");
-  const [referenceNote, setReferenceNote] = useState("");
-  const [message, setMessage] = useState("");
-  const [confirmsGraduation, setConfirmsGraduation] = useState(false);
+  const dialog = useRef<HTMLDialogElement>(null);
+  const [decision, setDecision] = useState<Exclude<OfficerDecision, "verified"> | null>(null);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+  const messageValid = message.trim().length > 0 && message.trim().length <= 1000;
   useEffect(() => {
     heading.current?.focus({ preventScroll: true });
     if (window.matchMedia("(max-width: 760px)").matches) heading.current?.scrollIntoView({ block: "start" });
   }, []);
 
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  useEffect(() => {
+    if (decision) dialog.current?.showModal();
+    else dialog.current?.close();
+  }, [decision]);
+
+  function openMessage(status: Exclude<OfficerDecision, "verified">) {
     setError("");
-    if (!status) { setError("Choose a review decision."); return; }
+    setMessage("");
+    setDecision(status);
+  }
+
+  function cancelMessage() {
+    if (busy) return;
+    setDecision(null);
+    setMessage("");
+    setError("");
+  }
+
+  async function decide(status: OfficerDecision) {
+    if (busy) return;
+    setBusy(true);
+    setError("");
     try {
-      reviewDemoApplication(profile, { status, message, reference: reference || undefined, referenceNote, confirmsGraduation });
+      await reviewApplication(profile, status, message);
+      dialog.current?.close();
+      setDecision(null);
+      setMessage("");
       onSaved();
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Unable to save this decision. Please try again."); }
+    finally { setBusy(false); }
   }
 
   const fields = [
     ["Batch year", profile.batchYear], ["Middle / maiden name", profile.middleName],
     ["Section", profile.section], ["Class adviser", profile.adviser],
-    ["Email address", profile.email], ["Mobile number", profile.mobile],
+    ["Username", profile.username || "Not assigned"], ["Mobile number", profile.mobile],
     ["Profession / occupation", professionLabel(profile)], ["Employers / businesses", profile.employers],
   ];
 
@@ -42,20 +64,30 @@ export default function ApplicationDetails({ profile, onSaved }: { profile: Alum
       <div className={styles.identity}><ProfileAvatar profile={profile} size={72} /><div><p className={styles.eyebrow}>Graduate application</p><h2 ref={heading} tabIndex={-1}>{profile.firstName} {profile.lastName}</h2><span className={styles.status} data-status={profile.verification}>{verificationLabels[profile.verification]}</span></div></div>
       <p className={styles.submitted}>Registered {reviewDate(profile.createdAt)} · Philippine time</p>
       <dl className={styles.detailsGrid}>{fields.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value || "Not provided"}</dd></div>)}</dl>
-      <form className={styles.reviewForm} onSubmit={submit}>
-        <h3>Record a decision</h3><p>Graduates only. Record the reference checked before approving. These are demonstration decisions.</p>
-        <label>Decision *<select name="decision" value={status} onChange={event => { setStatus(event.target.value as VerificationStatus); setError(""); }} required><option value="">Choose a decision</option><option value="verified" disabled={profile.verification === "verified"}>Approve graduate</option><option value="needs_information" disabled={profile.verification === "needs_information"}>Request more information</option><option value="rejected" disabled={profile.verification === "rejected"}>Reject application</option><option value="pending" disabled={profile.verification === "pending"}>Return to pending review</option></select></label>
-        {status === "verified" && <>
-          <label>Graduation reference *<select name="graduationReference" value={reference} onChange={event => setReference(event.target.value as VerificationReference)} required><option value="">Select a reference</option>{Object.entries(verificationReferences).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
-          <label>Reference details — visible to officers *<input name="referenceNote" value={referenceNote} onChange={event => setReferenceNote(event.target.value)} maxLength={300} placeholder="e.g. Demo graduation list, Batch 2008, entry 12" required /><small>Use fictional reference details. No document is uploaded through this demo.</small></label>
-          <label className={styles.confirmation}><input name="confirmsGraduation" type="checkbox" checked={confirmsGraduation} onChange={event => setConfirmsGraduation(event.target.checked)} required /><span>I confirm that the reference supports graduation from Davao City National High School. *</span></label>
-        </>}
-        <label>Message to applicant *<textarea name="reviewMessage" rows={3} value={message} onChange={event => setMessage(event.target.value)} maxLength={1000} placeholder={status === "needs_information" ? "Explain what needs clarification, such as the name used during schooling or section." : "Explain the decision and any next steps."} required /><small>This message appears on the applicant’s dashboard. Email delivery is not connected.</small></label>
-        {error && <p className="form-error" role="alert">{error}</p>}
-        <button type="submit" className="button">Save decision <span aria-hidden="true">✓</span></button>
-      </form>
+      <div className={styles.reviewForm}>
+        {!decision && error && <p className="form-error" role="alert">{error}</p>}
+        <div className={styles.decisionActions} role="group" aria-label="Application decision">
+          <button type="button" className="button" disabled={busy || profile.verification === "verified"} onClick={() => decide("verified")}>Approve</button>
+          <button type="button" className="button button-outline" disabled={busy || profile.verification === "needs_information"} onClick={() => openMessage("needs_information")}>Request further details</button>
+          <button type="button" className="button button-outline" disabled={busy || profile.verification === "rejected"} onClick={() => openMessage("rejected")}>Reject</button>
+        </div>
+      </div>
+      <dialog ref={dialog} className={styles.messageDialog} aria-labelledby="decision-dialog-title" aria-describedby="decision-dialog-help" onCancel={event => { if (busy) event.preventDefault(); else cancelMessage(); }}>
+        <form className={styles.reviewForm} onSubmit={event => { event.preventDefault(); if (decision && messageValid) decide(decision); }}>
+          <h3 id="decision-dialog-title">{decision === "rejected" ? "Reject application" : "Request further details"}</h3>
+          <p id="decision-dialog-help">Write a message for {profile.firstName} {profile.lastName}. The decision and message will appear on their dashboard only after you press Send.</p>
+          <label>Message to applicant *
+            <textarea name="reviewMessage" rows={4} value={message} onChange={event => setMessage(event.target.value)} maxLength={1000} required disabled={busy} />
+          </label>
+          {error && <p className="form-error" role="alert">{error}</p>}
+          <div className={styles.decisionActions}>
+            <button type="button" className="button button-outline" onClick={cancelMessage} disabled={busy}>Cancel</button>
+            <button type="submit" className="button" disabled={!messageValid || busy}>{busy ? "Sending…" : "Send"}</button>
+          </div>
+        </form>
+      </dialog>
       <section className={styles.history} aria-label="Review history"><h3>Review history</h3>
-        {!profile.reviewHistory?.length ? <p>No review decisions recorded yet.{profile.verification === "verified" ? " This is the original sample verified account." : ""}</p> : <ol>{[...profile.reviewHistory].reverse().map(entry => <li key={entry.id}><div><span className={styles.status} data-status={entry.status}>{verificationLabels[entry.status]}</span><time dateTime={entry.reviewedAt}>{reviewDate(entry.reviewedAt)}</time></div><strong>{entry.reviewer} · {entry.actor === "officer" ? "Officer" : "Applicant"}</strong><p>{entry.message}</p>{entry.reference && <p className={styles.reference}><strong>{verificationReferences[entry.reference]}</strong><br />{entry.referenceNote}</p>}</li>)}</ol>}
+        {!profile.reviewHistory?.length ? <p>No review decisions recorded yet.</p> : <ol>{[...profile.reviewHistory].reverse().map(entry => <li key={entry.id}><div><span className={styles.status} data-status={entry.status}>{verificationLabels[entry.status]}</span><time dateTime={entry.reviewedAt}>{reviewDate(entry.reviewedAt)}</time></div><strong>{entry.reviewer} · {entry.actor === "officer" ? "Officer" : "Applicant"}</strong>{entry.message && <p>{entry.message}</p>}</li>)}</ol>}
       </section>
     </section>
   );

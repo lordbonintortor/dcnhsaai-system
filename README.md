@@ -1,6 +1,28 @@
 # DCNHS Alumni Association Website
 
-Presentation prototype for the Davao City National High School Alumni Association, Inc.
+Website and alumni registry for the Davao City National High School Alumni Association, Inc.
+
+Deployment target: Vercel for now, with Hostinger planned later. Both use the same Supabase project. Local Vercel build configuration is prepared; deployment and account/team setup are pending. See [deployment steps and plan requirements](docs/DEPLOYMENT.md).
+
+## Current development — October 26, 2026
+
+**October 27 username-only update:** Alumni and officers now use username/password sign-in. Account email fields have been removed. The user applied [the username-only migration](supabase/migrations/202610270002_username_only.sql), cleared the old accounts, and saved the server secret key. Read-only checks verified the connection and a healthy local website. The user then reported successful fresh alumni registration/sign-in, officer sign-in, approval, Verified status, and public-directory visibility. Production hosting and the remaining live checks are pending. For a new environment, follow [the deployment guide](docs/DEPLOYMENT.md); the username-only migration supports both earlier schema states.
+
+The account screens now use server APIs backed by Supabase Auth, PostgreSQL, and private photo storage. Registration starts at pending review. Officers can approve, request details, or reject; applicants sign in to read messages and resubmit. Automated emails remain disabled. Approved alumni appear in the public name-and-batch directory and can view other approved members’ basic profiles.
+
+**Local Supabase connection verified; production deployment is pending.** The user has created the project, applied the migration, configured authentication, and saved local connection variables. The website health, public-directory endpoint, and signed-out access checks pass. On October 27, the user reported that the guided registration/sign-in, officer-login, and request-details/resubmission/approval tests passed, including approved-directory visibility. Hosting setup and final checks on the hosted site are next. Missing configuration returns a service error; the website does not fall back to browser-only accounts. The historical demo credentials below do not work in this version.
+
+Use Node.js 22 or 24. For a new environment, copy `.env.example` to `.env.local` and follow [the deployment guide](docs/DEPLOYMENT.md) for Supabase configuration, Hostinger setup, and live verification. The Supabase migration has been applied by the user; production hosting has not been deployed yet.
+
+```bash
+npm ci
+npm run lint
+npm test
+npm run build -- --webpack
+npm run dev
+```
+
+The sections below document the earlier presentation prototype and remain as historical reference.
 
 ## Run locally
 
@@ -21,6 +43,7 @@ Open [http://localhost:3000](http://localhost:3000).
 - `/login` — sign in with a registered browser account or the sample account
 - `/alumni-directory` — public name-and-batch directory with search and batch filtering; no sign-in required
 - `/dashboard` — alumni overview, registry status, profile summary, and sample community updates
+- `/dashboard/application` — application status, officer messages, history, and correction/resubmission guidance without automated emails
 - `/dashboard/profile` — edit and save the current demo account's alumni information
 - `/dashboard/directory` — search alumni by name or batch year, filter batches, and jump to your own batch; directory rows show only names and batch years
 - `/dashboard/directory/[id]` — signed-in alumni can view a fellow alumnus's name, batch year, profile photo, and profession
@@ -33,6 +56,10 @@ The Association dropdown contains Alumni Activities, Alumni Projects, Board of T
 This version is frontend-only. Registration, sign-in, profile editing, sign-out, and officer review work as a browser demo. Account data is stored in this browser, with no server or shared database. Production authentication, school-record verification, email verification, password recovery, and proof-document storage are not connected.
 
 ## Sample account
+
+### Pending application sample
+
+**Jamie Reyes, Batch 2015** starts at **Pending review** and appears automatically in the officer queue, without registration. Sign in at `/login` with `pending.demo@example.com` / `Pending2026!`. Review Jamie at `/admin` using the officer demo account below. Decisions and profile edits persist on the same browser; signing in again does not reset the sample to pending. The original Alex Santos sample remains available separately. These are fictional browser-demo accounts.
 
 Open `/login` and sign in with:
 
@@ -57,6 +84,8 @@ Trustee biographies are maintained in `src/lib/trustees.ts`, based on `BOT Brief
 
 ## Officer review demo
 
+**October 15 simplification:** Officers now use three direct actions: **Approve**, **Request further details**, and **Reject**. Request further details and Reject open a message dialog. Send remains disabled until a nonblank message is entered; only Send saves the decision and displays the message on the applicant dashboard. Cancel or Escape closes the dialog without saving. Approve works without a message and does not send a drafted message. Reference fields and the confirmation checkbox remain removed. Decisions record the officer and time. Repeating the current status is disabled. Historical records remain readable; the earlier multi-decision walkthrough below describes the previous form.
+
 Eligibility is **DCNHS graduates only**, confirmed September 25, 2026. Registration states this requirement and includes it in the applicant declaration. A declaration, email address, or avatar does not establish graduation.
 
 Open `/admin/login` (also linked from alumni sign-in) with:
@@ -76,8 +105,16 @@ Officer sessions are separate from alumni sessions and last in the current tab. 
 
 - Next.js and TypeScript
 - PostgreSQL, authentication, and file storage through Supabase
-- Vercel deployment
+- Hostinger Node.js hosting (current intended deployment target)
 
 ## Before production development
 
 The August 2026 association history and official contact details have been supplied and incorporated. Remaining decisions include the other pages’ official content, branding permissions, final registration fields, verification process, authorized administrators, privacy policy, and rules for publishing reports and donation information.
+
+## October 15, 2026 — Application status without automated emails
+
+Registration completion now directs applicants to sign in and check **Application status**. The new portal page is available before the first officer message and explains pending, verified, needs-information, and rejected states. The same status panel remains on the overview. Officer decisions still update through the existing browser-demo review flow.
+
+Automated email verification and decision notifications are outside the selected first-release workflow. Email remains the existing sign-in identifier; this change does not verify ownership of that address or replace it with a username. Forgot-password help links to the association's contact details and explains identity verification and officer assistance. No recovery request is submitted and no officer-assisted reset has been implemented yet.
+
+The intended production setup is Hostinger domain/Next.js hosting with Supabase authentication, database, and photo storage. These services are not connected yet. See [the October 15 progress update](docs/PROGRESS-2026-10-15.md) for demo steps and outstanding work.
