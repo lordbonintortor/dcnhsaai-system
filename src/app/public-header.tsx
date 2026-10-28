@@ -26,7 +26,7 @@ export default function PublicHeader({ children }: { children: React.ReactNode }
 
   return (
     <header className="site-header">
-      <Link className="brand" href="#top" aria-label="DCNHS Alumni home">
+      <Link className="brand" href="/" aria-label="DCNHS Alumni home">
         <Image className="brand-logo" src="/branding/dcnhsaai-logo.svg" alt="DCNHS Alumni Association seal" width={52} height={52} priority />
         <span>
           <strong>DCNHS Alumni</strong>

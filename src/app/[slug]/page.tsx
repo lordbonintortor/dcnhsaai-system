@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { alumniProjects } from "@/lib/alumni-projects";
 import ActivityPost from "@/app/activity-post";
 import { tionkoDayActivity } from "@/lib/activity-post";
+import AssociationDropdown from "@/app/association-dropdown";
+import PublicHeader from "@/app/public-header";
 
 type AssociationDocument = {
   title: string;
@@ -95,14 +97,18 @@ export default async function AssociationPage({ params }: { params: Promise<{ sl
 
   return (
     <main className="content-page">
-      <header className="site-header content-header">
-        <Link className="brand" href="/">
-          <Image className="brand-logo" src="/branding/dcnhsaai-logo.svg" alt="DCNHS Alumni Association seal" width={52} height={52} priority />
-          <span><strong>DCNHS Alumni</strong><small>Association, Inc.</small></span>
-        </Link>
-        <Link className="back-link" href="/">← Back to home</Link>
-        <Link className="button button-small" href="/register">Join the registry</Link>
-      </header>
+      <PublicHeader>
+        <AssociationDropdown>
+          <Link href="/alumni-association-events">Alumni Activities</Link>
+          <Link href="/alumni-projects">Alumni Projects</Link>
+          <Link href="/board-of-trustees">Board of Trustees</Link>
+          <Link href="/management-reports">Management Reports</Link>
+          <Link href="/association-documents">Association Documents</Link>
+          <Link href="/outstanding-student-and-alumni-awardees">Outstanding Student and Alumni Awardees</Link>
+        </AssociationDropdown>
+        <Link href="/alumni-directory">Alumni Directory</Link>
+        <Link className="button button-small donate-button" href="/donate">Donate</Link>
+      </PublicHeader>
 
       <section className="content-hero">
         <div><p className="eyebrow">{page.eyebrow}</p><h1>{page.title}</h1><p>{page.intro}</p></div>
