@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { association } from "@/lib/association";
-import { donationAccounts } from "@/lib/donations";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -26,16 +25,33 @@ export default function DonatePage() {
       <section className={styles.body} aria-labelledby="donation-accounts-title">
         <div>
           <p className="eyebrow gold">Bank deposits &amp; transfers</p>
-          <h2 id="donation-accounts-title">Donation bank accounts</h2>
-          {donationAccounts.length > 0 ? <>
-            <p className={styles.intro}>You may send your donation through any of the association’s accounts listed below.</p>
-            <div className={styles.accounts}>{donationAccounts.map(account => (
-              <article className={styles.account} key={account.id}>
-                <h3>{account.bankName}</h3>
-                <dl><div><dt>Account name</dt><dd>{account.accountName}</dd></div><div><dt>Account number</dt><dd className={styles.number}>{account.accountNumber}</dd></div></dl>
-              </article>
-            ))}</div>
-          </> : <div className={styles.empty}><h3>Bank account details will be posted here</h3><p>Please contact the association for donation instructions while the official account details are being prepared.</p></div>}
+          <h2 id="donation-accounts-title">Ways to donate</h2>
+          <p className={styles.intro}>Choose a convenient way to support the Association’s alumni and school community programs.</p>
+          <div className={styles.accounts}>
+            <article className={styles.account}>
+              <div className={styles.paymentIcon}><Image src="/branding/bdo-icon.png" alt="BDO" width={58} height={58} /></div>
+              <div>
+                <p className={styles.paymentLabel}>Bank transfer</p>
+                <h3>BDO</h3>
+                <dl>
+                  <div><dt>Account name</dt><dd>Davao City National High School Alumni Assoc., Inc.</dd></div>
+                  <div><dt>SA account number</dt><dd className={styles.number}>000861135814</dd></div>
+                  <div><dt>Branch</dt><dd>BDO SM City, GF Main Extension, Davao City</dd></div>
+                </dl>
+              </div>
+            </article>
+            <article className={styles.account}>
+              <div className={styles.paymentIcon}><Image src="/branding/gcash-icon-new.png" alt="GCash" width={58} height={58} /></div>
+              <div>
+                <p className={styles.paymentLabel}>Mobile wallet</p>
+                <h3>GCash</h3>
+                <dl>
+                  <div><dt>Account number</dt><dd className={styles.number}>0917 589 1190</dd></div>
+                  <div><dt>Account name</dt><dd>Merle Bobilles</dd></div>
+                </dl>
+              </div>
+            </article>
+          </div>
         </div>
         <aside className={styles.contact}>
           <p className="eyebrow gold">We’re here to help</p><h3>Donation inquiries</h3>

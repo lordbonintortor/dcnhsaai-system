@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import ProfileAvatar from "@/app/profile-avatar";
 import { professionLabel, type AlumniProfile } from "@/lib/alumni-profile";
 import { reviewDate, verificationLabels, type OfficerDecision } from "@/lib/application-review";
-import { reviewApplication } from "@/lib/account-api";
+import { api, reviewApplication } from "@/lib/account-api";
 import styles from "./officer.module.css";
 
 export default function ApplicationDetails({ profile, onSaved }: { profile: AlumniProfile; onSaved: () => void }) {
@@ -14,6 +14,8 @@ export default function ApplicationDetails({ profile, onSaved }: { profile: Alum
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [resetBusy, setResetBusy] = useState(false);
+  const [temporaryPassword, setTemporaryPassword] = useState("");
   const messageValid = message.trim().length > 0 && message.trim().length <= 1000;
   useEffect(() => {
     heading.current?.focus({ preventScroll: true });
@@ -38,6 +40,21 @@ export default function ApplicationDetails({ profile, onSaved }: { profile: Alum
     setError("");
   }
 
+  async function issueTemporaryPassword() {
+    if (resetBusy || !window.confirm(`Issue a temporary password for ${profile.firstName} ${profile.lastName}?`)) return;
+    setResetBusy(true);
+    setError("");
+    setTemporaryPassword("");
+    try {
+      const result = await api<{ temporaryPassword: string }>("/api/account/reset-password", "POST", { userId: profile.id });
+      setTemporaryPassword(result.temporaryPassword);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Unable to issue a temporary password.");
+    } finally {
+      setResetBusy(false);
+    }
+  }
+
   async function decide(status: OfficerDecision) {
     if (busy) return;
     setBusy(true);
@@ -55,7 +72,7 @@ export default function ApplicationDetails({ profile, onSaved }: { profile: Alum
   const fields = [
     ["Batch year", profile.batchYear], ["Middle / maiden name", profile.middleName],
     ["Section", profile.section], ["Class adviser", profile.adviser],
-    ["Username", profile.username || "Not assigned"], ["Mobile number", profile.mobile],
+    ["Username", profile.username || "Not assigned"], ["Email address", profile.email], ["Mobile number", profile.mobile],
     ["Profession / occupation", professionLabel(profile)], ["Employers / businesses", profile.employers],
   ];
 
@@ -71,6 +88,8 @@ export default function ApplicationDetails({ profile, onSaved }: { profile: Alum
           <button type="button" className="button button-outline" disabled={busy || profile.verification === "needs_information"} onClick={() => openMessage("needs_information")}>Request further details</button>
           <button type="button" className="button button-outline" disabled={busy || profile.verification === "rejected"} onClick={() => openMessage("rejected")}>Reject</button>
         </div>
+        <button type="button" className="button button-outline" disabled={resetBusy} onClick={issueTemporaryPassword}>{resetBusy ? "Issuing…" : "Issue temporary password"}</button>
+        {temporaryPassword && <p role="status">Temporary password: <strong>{temporaryPassword}</strong><br />Give this to the account holder securely. It will be replaced when they sign in.</p>}
       </div>
       <dialog ref={dialog} className={styles.messageDialog} aria-labelledby="decision-dialog-title" aria-describedby="decision-dialog-help" onCancel={event => { if (busy) event.preventDefault(); else cancelMessage(); }}>
         <form className={styles.reviewForm} onSubmit={event => { event.preventDefault(); if (decision && messageValid) decide(decision); }}>

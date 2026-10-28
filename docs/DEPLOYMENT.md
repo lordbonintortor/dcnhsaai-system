@@ -131,7 +131,9 @@ union all select 'application_reviews', count(*) from public.application_reviews
 
 All counts should be zero before creating the fresh account. Configure `SUPABASE_SECRET_KEY` and verify health first. Create alumni accounts through `/register` so they receive an alumni profile and graduation consent record. Create officer-only accounts using steps 4–5 above. Passwords are entered privately by the operator or applicant. Account deletion and replacement have not been performed by the assistant.
 
-The sign-in page directs users to contact the association for account-access help. It does not send email recovery links or submit reset requests. After the association confirms a user’s identity, the project operator can reset their password through Supabase’s administrative tooling. A self-service officer reset screen is not part of this implementation.
+The sign-in page directs users to contact the association for account-access help. It does not send email recovery links or submit reset requests. After the association confirms a user’s identity, an authorized officer can open that alumni application and choose **Issue temporary password**. The generated password is shown only in that officer session; deliver it to the verified account holder through a separate private channel and do not save it in messages or records. On the next sign-in, the user is sent to the password-change screen and cannot open the dashboard until a new password is saved.
+
+The recovery action requires the server-only `SUPABASE_SECRET_KEY`, which is already required for username lookup. The key must be configured in local and Render runtime environments and must never be exposed as a `NEXT_PUBLIC_*` variable. If an account is not associated with an alumni profile, or the officer cannot verify the user’s identity, do not issue a temporary password.
 
 Events, projects, reports, awardees, and donation account details still need approved content. The public page placeholders remain visible. Browser demo accounts are not transferred automatically; use newly registered test accounts for integration checks.
 

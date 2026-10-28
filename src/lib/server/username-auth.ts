@@ -27,3 +27,11 @@ export async function usernameCredentials(username: string) {
   // Existing Auth identities/passwords stay intact. This address never leaves the server.
   return { userId: account.user_id, email: data.user.email };
 }
+
+export function adminAuthClient() {
+  return usernameLookupClient();
+}
+
+export function temporaryPassword() {
+  return `Dcn${crypto.randomUUID().replaceAll("-", "").slice(0, 18)}!`;
+}

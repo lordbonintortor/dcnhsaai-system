@@ -19,7 +19,7 @@ export function useAlumniProfile() {
 }
 
 export default function DashboardShell({ children }: { children: ReactNode }) {
-  const { profile, officer, ready, error } = useAccount();
+  const { profile, officer, mustChangePassword, ready, error } = useAccount();
   const [signOutError, setSignOutError] = useState("");
   const [signingOut, setSigningOut] = useState(false);
   const pathname = usePathname();
@@ -28,7 +28,8 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (ready && !error && !profile) router.replace("/login");
-  }, [ready, profile, error, router]);
+    if (ready && profile && mustChangePassword) router.replace("/change-password");
+  }, [ready, profile, mustChangePassword, error, router]);
 
   async function signOut() {
     setSigningOut(true); setSignOutError("");
@@ -39,6 +40,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
   if (error) return <main className={styles.loading}><p className="form-error" role="alert">{error}</p><Link href="/login">Go to sign in</Link></main>;
 
   if (!ready || !profile) return <main className={styles.loading}><p role="status">Opening your alumni portal…</p><Link href="/login">Go to sign in</Link></main>;
+  if (mustChangePassword) return <main className={styles.loading}><p role="status">Redirecting you to password setup…</p></main>;
 
   return (
     <ProfileContext.Provider value={profile}>

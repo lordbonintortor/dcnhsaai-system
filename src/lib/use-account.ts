@@ -56,8 +56,8 @@ export function useResource<T>(path: string) {
 }
 
 export function useAccount() {
-  const { data, ready, error } = useResource<{ profile: AlumniProfile | null; officer: { name: string } | null }>("/api/account/session");
-  return { profile: data?.profile ?? null, officer: data?.officer ?? null, ready, error };
+  const { data, ready, error } = useResource<{ profile: AlumniProfile | null; officer: { name: string } | null; mustChangePassword: boolean }>("/api/account/session");
+  return { profile: data?.profile ?? null, officer: data?.officer ?? null, mustChangePassword: data?.mustChangePassword ?? false, ready, error };
 }
 
 export function useApplications() {

@@ -20,8 +20,8 @@ export default function LoginForm() {
     setBusy(true);
     setError("");
     try {
-      await signIn(identifier, password, remember);
-      router.replace("/dashboard");
+      const result = await signIn(identifier, password, remember);
+      router.replace(result.mustChangePassword ? "/change-password" : "/dashboard");
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Unable to sign in. Please try again.");
       setBusy(false);

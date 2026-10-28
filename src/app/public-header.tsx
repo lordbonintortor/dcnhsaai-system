@@ -11,6 +11,7 @@ export default function PublicHeader({ children }: { children: React.ReactNode }
   const { profile, ready } = useAccount();
   const [signingOut, setSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   async function handleSignOut() {
     setSigningOut(true);
@@ -32,7 +33,7 @@ export default function PublicHeader({ children }: { children: React.ReactNode }
           <small>Association, Inc.</small>
         </span>
       </Link>
-      <nav aria-label="Main navigation">
+      <nav className="desktop-nav" aria-label="Main navigation">
         <Link href="/about">About Us</Link>
         {children}
       </nav>
@@ -55,6 +56,18 @@ export default function PublicHeader({ children }: { children: React.ReactNode }
           </>
         )}
       </div>
+      <button className="mobile-menu-button" type="button" aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen((open) => !open)}>
+        <span className="visually-hidden">Toggle navigation</span>
+        <span aria-hidden="true">{menuOpen ? "×" : "☰"}</span>
+      </button>
+      {menuOpen && (
+        <nav className="mobile-nav" id="mobile-navigation" aria-label="Mobile navigation" onClick={(event) => {
+          if ((event.target as HTMLElement).closest("a")) setMenuOpen(false);
+        }}>
+          <Link href="/about">About Us</Link>
+          {children}
+        </nav>
+      )}
     </header>
   );
 }

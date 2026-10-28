@@ -15,7 +15,7 @@ export const alumniProjects: Record<string, AlumniProject[]> = {
     },
     {
       title: "Construction of the Doña Vicenta Monument",
-      description: "The monument was a gesture of compromise and appreciation from the school, its students, and alumni to the Tionko Family for acquiescing to the request to keep the school name of Davao City National High School and for their generous land donation. The project was completed in September 2024 for the first Tionko Day Celebration on October 20, 2024.",
+      description: "The monument was a gesture of compromise and appreciation from the school, its students, and alumni to the Tionko Family for acquiescing to the request to keep the school name of Davao City National High School and for their generous land donation. The project was completed in September 2024.",
     },
     {
       title: "Solar Lighting System for Davao City National High School",

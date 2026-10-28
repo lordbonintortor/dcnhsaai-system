@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
-import { ApiError, backend, backendConfig, detailsInput, officerFor, photoInput, profilesFor, requireUser, rpcError, signupClient, uploadPhoto } from "@/lib/server/backend";
+import { ApiError, backend, backendConfig, detailsInput, officerFor, photoInput, profilesFor, requireOfficer, requireUser, rpcError, signupClient, uploadPhoto } from "@/lib/server/backend";
 import { failure, input, json } from "@/lib/server/http";
 import { normalizedUsername, USERNAME_HELP, usernameAuthEmail } from "@/lib/username";
-import { usernameAccount, usernameCredentials } from "@/lib/server/username-auth";
+import { adminAuthClient, usernameAccount, usernameCredentials, temporaryPassword } from "@/lib/server/username-auth";
 
 export const runtime = "nodejs";
 type Context = { params: Promise<{ action: string }> };
@@ -17,7 +17,7 @@ export async function GET(_request: Request, { params }: Context) {
       return json({ profile: null, officer: null });
     }
     const [profiles, officer] = await Promise.all([profilesFor(client, data.user.id), officerFor(client, data.user.id)]);
-    return json({ profile: profiles[0] ?? null, officer });
+    return json({ profile: profiles[0] ?? null, officer, mustChangePassword: data.user.user_metadata?.forcePasswordChange === true });
   } catch (cause) { return failure(cause); }
 }
 
@@ -90,7 +90,7 @@ export async function POST(request: Request, { params }: Context) {
         throw new ApiError(body.officer === true ? "This account does not have officer access." : "Use the officer sign-in page for this account.", 403);
       }
       (await cookies()).set("dcnhsaai.remember", remember ? "yes" : "no", { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", ...(remember ? { maxAge: 60 * 60 * 24 * 30 } : {}) });
-      return json({ ok: true });
+      return json({ ok: true, mustChangePassword: data.user.user_metadata?.forcePasswordChange === true });
     }
     if (action === "logout") {
       const client = await backend();
@@ -104,6 +104,24 @@ export async function POST(request: Request, { params }: Context) {
       await requireUser(client);
       rpcError((await client.rpc("resubmit_alumni_application")).error);
       return json({ ok: true });
+    }
+    if (action === "change-password") {
+      const client = await backend();
+      await requireUser(client);
+      if (typeof body.password !== "string" || body.password.length < 8 || body.password.length > 128) throw new ApiError("Use a password with 8–128 characters.");
+      const { error } = await client.auth.updateUser({ password: body.password, data: { forcePasswordChange: false } });
+      if (error) throw new ApiError("Your password could not be changed. Please try again.", 503);
+      return json({ ok: true });
+    }
+    if (action === "reset-password") {
+      const client = await backend();
+      await requireOfficer(client);
+      if (typeof body.userId !== "string" || !body.userId) throw new ApiError("Choose an account first.");
+      const admin = adminAuthClient();
+      const password = temporaryPassword();
+      const { error } = await admin.auth.admin.updateUserById(body.userId, { password, user_metadata: { forcePasswordChange: true } });
+      if (error) throw new ApiError("The temporary password could not be issued. Please try again.", 503);
+      return json({ temporaryPassword: password });
     }
     return json({ error: "Not found" }, 404);
   } catch (cause) { return failure(cause); }

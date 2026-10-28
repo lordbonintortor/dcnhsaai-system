@@ -79,7 +79,7 @@ export default function RegistrationForm() {
       </ol>
       <p className="step-label">Step {step} of 2 · {step === 1 ? "Alumni information" : "Account setup"}</p>
       <h1 ref={heading} tabIndex={-1}>{step === 1 ? "Join the alumni registry" : "Set up your account"}</h1>
-      <p className="form-intro">{step === 1 ? "Fields marked with * are required." : "Choose a username and a password with at least 8 characters."}</p>
+      <p className="form-intro">{step === 1 ? "Fields marked with * are required." : "Choose a username and create a secure password."}</p>
       {step === 1 && <p className="eligibility-note">For graduates of Davao City National High School. Your alumni status is subject to officer review.</p>}
       <form onSubmit={submit}>
         {step === 1 ? (
@@ -98,6 +98,7 @@ export default function RegistrationForm() {
               <PasswordField id="password" label="Password *" value={password} onChange={setPassword} />
               <PasswordField id="confirmPassword" label="Confirm password *" value={confirmation} onChange={setConfirmation} />
             </div>
+            <p className="field-help">Password requirements: use 8–128 characters. For better security, use a mix of uppercase and lowercase letters, numbers, and special characters.</p>
             <p className="demo-note">Sign in with your username after registration. For account-access help, contact the association.</p>
           </>
         )}

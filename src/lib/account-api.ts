@@ -31,8 +31,9 @@ export async function registerAccount(details: ProfileDetails, username: string,
 }
 
 export async function signIn(username: string, password: string, remember = false, officer = false) {
-  await api("/api/account/login", "POST", { username, password, remember, officer });
+  const result = await api<{ mustChangePassword: boolean }>("/api/account/login", "POST", { username, password, remember, officer });
   notifyAccountChange();
+  return result;
 }
 
 export async function signOut() {
