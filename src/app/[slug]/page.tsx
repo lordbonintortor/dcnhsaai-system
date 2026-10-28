@@ -36,11 +36,6 @@ const pages: Record<string, AssociationPage> = {
         description: "Annual financial report of the DCNHS Alumni Association, Inc.",
         href: "/api/documents/management-reports/2025-financial-report-dcnhsaai",
       },
-      {
-        title: "Five-Year Financials (2021–2025)",
-        description: "Five-year financial report covering 2021 through 2025.",
-        href: "/api/documents/management-reports/5-year-financials-2021-2025",
-      },
     ],
   },
   "association-documents": {

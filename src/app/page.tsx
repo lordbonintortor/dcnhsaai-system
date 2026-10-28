@@ -68,6 +68,18 @@ export default function Home() {
         <p><strong>Give back</strong><span>Support the next generation</span></p>
       </section>
 
+      <section className="home-pathways section" aria-labelledby="pathways-title">
+        <div className="section-heading">
+          <div><p className="eyebrow gold">Find your place here</p><h2 id="pathways-title">A home for every City High story.</h2></div>
+          <p>Whether you are reconnecting with classmates, learning about our work, or helping the next generation, there is a place for you in the alumni community.</p>
+        </div>
+        <div className="pathway-grid">
+          <Link className="pathway-card" href="/alumni-directory"><span className="pathway-number">01</span><div><h3>Find your community</h3><p>Explore the approved alumni directory and reconnect with the people who shared your City High years.</p><span className="pathway-link">Browse the directory <Arrow /></span></div></Link>
+          <Link className="pathway-card" href="/alumni-association-events"><span className="pathway-number">02</span><div><h3>See what we are doing</h3><p>Follow association activities, projects, and milestones that keep our shared story moving forward.</p><span className="pathway-link">Explore activities <Arrow /></span></div></Link>
+          <Link className="pathway-card" href="/donate"><span className="pathway-number">03</span><div><h3>Help City High thrive</h3><p>Support programs and initiatives that create lasting opportunities for students and alumni.</p><span className="pathway-link">Learn how to give <Arrow /></span></div></Link>
+        </div>
+      </section>
+
       <section className="about section" id="about">
         <div>
           <p className="eyebrow gold">About Us</p>

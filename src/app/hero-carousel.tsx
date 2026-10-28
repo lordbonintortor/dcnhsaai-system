@@ -85,6 +85,7 @@ export default function HeroCarousel({ children }: { children: ReactNode }) {
               fill
               sizes="(max-width: 560px) 1400px, (max-width: 900px) 1200px, 100vw"
               className={styles.photo}
+              style={"objectPosition" in slide ? { objectPosition: slide.objectPosition } : undefined}
               loading={index === 0 ? "eager" : "lazy"}
               fetchPriority={index === 0 ? "high" : "auto"}
               draggable={false}
