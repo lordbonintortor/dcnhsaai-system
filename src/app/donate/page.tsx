@@ -31,7 +31,7 @@ export default function DonatePage() {
             <article className={styles.account}>
               <div className={styles.paymentIcon}><Image src="/branding/bdo-icon.png" alt="BDO" width={58} height={58} /></div>
               <div>
-                <p className={styles.paymentLabel}>Bank transfer</p>
+                <p className={styles.paymentLabel}>Direct deposit or bank transfer</p>
                 <h3>BDO</h3>
                 <dl>
                   <div><dt>Account name</dt><dd>Davao City National High School Alumni Assoc., Inc.</dd></div>
