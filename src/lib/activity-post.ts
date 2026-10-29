@@ -36,9 +36,9 @@ export const februaryElevenActivity = {
   summary: "The newly elected officers of the Board of Trustees of the Davao City National High School Alumni Association, Inc. officially took their oath of office at the Senior High School Conference Room of DCNHS.",
   body: "The ceremony was officiated by Mrs. Evelyn E. Magno, Principal IV of DCNHS, who expressed her deep gratitude to the alumni association and shared her enthusiasm for future collaborations between the alumni and the school administration.\n\nIn his address, Atty. Niceforo V. Solis, Jr. outlined three key focus areas for the association this year:\n\n✅ Strengthening alumni engagement – fostering meaningful connections among graduates through programs and development opportunities.\n\n✅ Supporting DCNHS – promoting initiatives that enhance academic excellence, student development, and institutional growth.\n\n✅ Encouraging community service – ensuring that DCNHS alumni continue to make a positive impact on society.\n\nDuring the same event, the alumni association formally turned over two significant projects initiated under the leadership of Brig. Gen. Leoncio A. Cirunay:\n\n📍 Doña Vicenta Tionko Monument – a tribute to the institution’s rich history.\n\n💡 Solar Lamp Post Project – co-donated by DCNHS Batch 1973, enhancing campus safety and sustainability.\n\n👏 Congratulations to the new officers of the Davao City National High School Alumni Association, Inc.! May you continue to strengthen the alumni community and uphold the legacy of our beloved alma mater.\n\n🎉 Mabuhay, Davao City High! 🎉\n\n#DCNHSAlumni #DavaoCityHigh #StrongerTogether #AlumniEngagement #SchoolPride",
   images: [
-    { src: "/events/february 11, 2025/IMAGE 1.jpg", alt: "DCNHS alumni officers taking their oath of office" },
-    { src: "/events/february 11, 2025/IMAGE 2.jpg", alt: "DCNHS alumni officers gathered during the oath-taking ceremony" },
-    { src: "/events/february 11, 2025/IMAGE 3.jpg", alt: "DCNHS alumni officers and guests at the service commitment event" },
+    { src: "/events/officers-oath-taking-2025-1.jpg", alt: "DCNHS alumni officers taking their oath of office" },
+    { src: "/events/officers-oath-taking-2025-2.jpg", alt: "DCNHS alumni officers gathered during the oath-taking ceremony" },
+    { src: "/events/officers-oath-taking-2025-3.jpg", alt: "DCNHS alumni officers and guests at the service commitment event" },
   ],
 } as const;
 
