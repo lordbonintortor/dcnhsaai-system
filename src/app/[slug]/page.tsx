@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { alumniProjects } from "@/lib/alumni-projects";
 import ActivityPost from "@/app/activity-post";
-import { tionkoDayActivity } from "@/lib/activity-post";
+import { alumniActivities, tionkoDayActivity } from "@/lib/activity-post";
 import AssociationDropdown from "@/app/association-dropdown";
 import PublicHeader from "@/app/public-header";
 
@@ -23,6 +23,7 @@ type AssociationPage = {
   reports?: AssociationDocument[];
   projectYears?: string[];
   activity?: typeof tionkoDayActivity;
+  activities?: typeof alumniActivities;
 };
 
 const pages: Record<string, AssociationPage> = {
@@ -73,7 +74,7 @@ const pages: Record<string, AssociationPage> = {
     intro: "Stay connected through annual homecomings, batch reunions, general assemblies, seminars, charitable works, fund-raising activities, and other alumni and association gatherings.",
     emptyTitle: "Activity posts",
     emptyText: "Read the association's activity posts, celebrations, and community events.",
-    activity: tionkoDayActivity,
+    activities: alumniActivities,
   },
   "outstanding-student-and-alumni-awardees": {
     eyebrow: "Celebrating excellence",
@@ -115,9 +116,9 @@ export default async function AssociationPage({ params }: { params: Promise<{ sl
       </section>
 
       <section className="content-body">
-        <div className="content-empty">
+        <div className={`content-empty${page.activities ? " activity-content" : ""}`}>
           <span className="empty-seal"><Image src="/branding/dcnhsaai-logo.svg" alt="" width={80} height={80} /></span>
-          {!page.activity && <><h2>{page.emptyTitle}</h2><p>{page.emptyText}</p></>}
+          {!page.activity && !page.activities && <><h2>{page.emptyTitle}</h2><p>{page.emptyText}</p></>}
           {page.documents || page.reports ? (
             <div className="document-list">
               {(page.documents ?? page.reports ?? []).map((document) => (
@@ -140,6 +141,18 @@ export default async function AssociationPage({ params }: { params: Promise<{ sl
                   <strong>{year}</strong>
                   <span className="project-year-link">View projects <span aria-hidden="true">↗</span></span>
                 </Link>
+              ))}
+            </div>
+          ) : page.activities ? (
+            <div className="activity-list">
+              {page.activities.map((activity) => (
+                <article className="activity-article" key={activity.slug}>
+                  <p className="eyebrow gold">{activity.date}</p>
+                  <h2>{activity.title}</h2>
+                  <p className="activity-lead">{activity.summary}</p>
+                  {activity.body.split("\n\n").map((paragraph) => <p key={paragraph} className={paragraph.startsWith("✅") || paragraph.startsWith("📍") || paragraph.startsWith("💡") || paragraph.startsWith("👏") || paragraph.startsWith("🎉") ? "activity-highlight" : undefined}>{paragraph}</p>)}
+                  <ActivityPost slug={activity.slug} images={activity.images} />
+                </article>
               ))}
             </div>
           ) : page.activity ? (
