@@ -51,7 +51,7 @@ export default function ActivityPost({ slug, images }: Props) {
       <div className="activity-gallery">
         {images.map((image, index) => (
           <button className={index === 0 ? "activity-image activity-image-feature" : "activity-image"} key={image.src} type="button" onClick={() => setSelectedImage(image)} aria-label={`View ${image.alt} larger`}>
-            <Image src={image.src} alt={image.alt} fill sizes={index === 0 ? "(max-width: 760px) 100vw, 66vw" : "(max-width: 760px) 100vw, 33vw"} />
+            <Image src={image.src} alt={image.alt} fill sizes={index === 0 ? "(max-width: 760px) 100vw, 66vw" : "(max-width: 760px) 100vw, 33vw"} quality={75} />
           </button>
         ))}
       </div>
@@ -68,7 +68,7 @@ export default function ActivityPost({ slug, images }: Props) {
       {selectedImage && (
         <div className="activity-lightbox" role="dialog" aria-modal="true" aria-label="Expanded activity image" onClick={() => setSelectedImage(null)}>
           <button className="activity-lightbox-close" type="button" onClick={() => setSelectedImage(null)} aria-label="Close expanded image">×</button>
-          <Image src={selectedImage.src} alt={selectedImage.alt} fill sizes="100vw" onClick={(event) => event.stopPropagation()} />
+          <Image src={selectedImage.src} alt={selectedImage.alt} fill sizes="100vw" quality={85} onClick={(event) => event.stopPropagation()} />
         </div>
       )}
     </div>

@@ -41,7 +41,7 @@ export default async function TrusteeProfile({ params }: ProfileProps) {
         </header>
         <aside className={styles.profileAside} aria-label="Portrait and professional background">
           <div className={`${styles.portrait} ${styles.profilePortrait}`}>
-            <Image src={trustee.photo} alt={`Portrait of ${trustee.name}`} fill sizes="(max-width: 640px) 88vw, (max-width: 900px) 360px, 32vw" loading="eager" />
+            <Image src={trustee.photo} alt={`Portrait of ${trustee.name}`} fill sizes="(max-width: 640px) 88vw, (max-width: 900px) 360px, 32vw" quality={80} loading="eager" />
           </div>
           <div className={styles.profileFacts}>
             <dl><div><dt>Association role</dt><dd>{trustee.role}</dd></div><div><dt>City High batch</dt><dd>{trustee.batch}</dd></div></dl>
@@ -59,7 +59,7 @@ export default async function TrusteeProfile({ params }: ProfileProps) {
         <div className={styles.otherGrid}>
           {trustees.filter((person) => person.slug !== trustee.slug).map((person) => (
             <Link className={styles.otherProfile} key={person.slug} href={`/board-of-trustees/${person.slug}`}>
-              <div className={styles.otherPortrait}><Image src={person.photo} alt="" fill sizes="76px" /></div>
+              <div className={styles.otherPortrait}><Image src={person.photo} alt="" fill sizes="76px" quality={70} /></div>
               <div><p className={styles.role}>{person.role}</p><h3>{person.name}</h3><p>Batch {person.batch}</p></div>
               <span className={styles.otherArrow} aria-hidden="true">↗</span>
             </Link>

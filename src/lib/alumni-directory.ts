@@ -1,15 +1,14 @@
 import type { AlumniProfile } from "./alumni-profile";
 
-// Directory entries deliberately contain no contact, employment, or account details.
-export type DirectoryEntry = { id: string; name: string; batchYear: string };
+export type DirectoryEntry = { id: string; name: string; batchYear: string; suffix?: string };
 
-export function toDirectoryEntry(profile: Pick<AlumniProfile, "id" | "firstName" | "lastName" | "batchYear">): DirectoryEntry {
-  return { id: profile.id, name: `${profile.firstName.trim()} ${profile.lastName.trim()}`, batchYear: profile.batchYear };
+export function toDirectoryEntry(profile: Pick<AlumniProfile, "id" | "firstName" | "lastName" | "suffix" | "batchYear">): DirectoryEntry {
+  return { id: profile.id, name: `${profile.firstName.trim()} ${profile.lastName.trim()}${profile.suffix ? `, ${profile.suffix.trim()}` : ""}`, batchYear: profile.batchYear, suffix: profile.suffix };
 }
 
 // Fictional entries for exploring different batches in the frontend presentation.
 export const sampleDirectoryEntries: DirectoryEntry[] = [
-  { id: "directory-sample-01", name: "Elena Mercado", batchYear: "1982" },
+  { id: "directory-sample-01", name: "Elena Mercado", batchYear: "1982", suffix: "" },
   { id: "directory-sample-02", name: "Roberto Dela Cruz", batchYear: "1994" },
   { id: "directory-sample-03", name: "Carmen Villanueva", batchYear: "1994" },
   { id: "directory-sample-04", name: "Paolo Mendoza", batchYear: "2000" },

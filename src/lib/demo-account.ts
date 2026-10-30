@@ -25,14 +25,14 @@ const DEMO_OFFICER = { id: "DEMO-OFFICER-001", name: "Demo reviewing officer" };
 export const DEMO_CHANGE_EVENT = "dcnhsaai-demo-change";
 
 export const sampleProfile: AlumniProfile = {
-  id: "DEMO-2008-001", firstName: "Alex", middleName: "", lastName: "Santos",
+  id: "DEMO-2008-001", firstName: "Alex", middleName: "", lastName: "Santos", suffix: "", country: "Philippines",
   email: DEMO_EMAIL, batchYear: "2008", section: "Rizal", adviser: "",
   mobile: "", professions: ["Information Technology"], otherProfession: "",
   employers: "Sample Technology Studio", verification: "verified", createdAt: "2026-09-09T00:00:00.000Z",
 };
 
 export const pendingSampleProfile: AlumniProfile = {
-  id: "DEMO-PENDING-2015-001", firstName: "Jamie", middleName: "", lastName: "Reyes",
+  id: "DEMO-PENDING-2015-001", firstName: "Jamie", middleName: "", lastName: "Reyes", suffix: "", country: "Philippines",
   email: PENDING_DEMO_EMAIL, batchYear: "2015", section: "Sampaguita", adviser: "",
   mobile: "", professions: ["Engineering"], otherProfession: "",
   employers: "Fictional Engineering Studio", verification: "pending", createdAt: "2026-10-15T00:00:00.000Z",
@@ -155,7 +155,7 @@ export function demoMemberProfile(id: string): MemberDirectoryProfile | null {
   if (profile) return toMemberDirectoryProfile(profile);
   const entry = sampleDirectoryEntries.find(item => item.id === id);
   // Name-only presentation samples have no additional personal information.
-  return entry ? { ...entry, firstName: entry.name, lastName: "", photoDataUrl: "", profession: "" } : null;
+  return entry ? { ...entry, firstName: entry.name, lastName: "", country: "", email: "", photoDataUrl: "", profession: "" } : null;
 }
 
 export function signOutDemo() {

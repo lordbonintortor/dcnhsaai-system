@@ -44,7 +44,6 @@ export default async function AlumniProjectsYearPage({ params }: Props) {
           <article className="project-detail-card" key={project.title}>
             <span className="project-number">{String(index + 1).padStart(2, "0")}</span>
             <div>
-              <p className="eyebrow gold">Project {index + 1}</p>
               <h2>{project.title}</h2>
               <p>{project.description}</p>
             </div>

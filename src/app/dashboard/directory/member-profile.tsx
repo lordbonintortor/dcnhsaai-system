@@ -28,9 +28,11 @@ export default function MemberProfile({ id }: { id: string }) {
           </div>
           <dl className={styles.details}>
             <div><dt>Batch year</dt><dd>{profile.batchYear}</dd></div>
+            <div><dt>Email address</dt><dd>{profile.email || "Not provided"}</dd></div>
+            <div><dt>Country of current residence</dt><dd>{profile.country || "Not provided"}</dd></div>
             <div><dt>Profession / occupation</dt><dd>{profile.profession || "Not provided"}</dd></div>
           </dl>
-          <p className={styles.note}>Member profiles are available to approved alumni. The public directory displays only names and batch years.</p>
+          <p className={styles.note}>Member profiles are available to approved alumni. Email and country of current residence are shown here instead of in the directory list.</p>
           {viewer.id === profile.id && <Link className={`button button-outline ${styles.edit}`} href="/dashboard/profile">Edit my profile</Link>}
         </>
       )}

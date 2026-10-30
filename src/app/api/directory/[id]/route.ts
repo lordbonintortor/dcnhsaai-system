@@ -12,8 +12,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     const row = data?.[0];
     if (!row) return json({ profile: null });
     return json({ profile: {
-      id: row.id, name: `${row.firstName} ${row.lastName}`, firstName: row.firstName,
-      lastName: row.lastName, batchYear: row.batchYear,
+      id: row.id, name: `${row.firstName} ${row.lastName}${row.suffix ? `, ${row.suffix}` : ""}`, firstName: row.firstName,
+      lastName: row.lastName, suffix: row.suffix, country: row.country, email: row.email, batchYear: row.batchYear,
       profession: row.professions.map((value: string) => value === "Other" ? row.otherProfession : value).join(", "),
       photoDataUrl: await signedPhoto(client, row.photo_path),
     } });

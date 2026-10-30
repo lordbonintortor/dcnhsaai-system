@@ -31,7 +31,7 @@ export default function BoardPage() {
             <article className={styles.card} key={trustee.slug}>
               <Link className={styles.cardLink} href={`/board-of-trustees/${trustee.slug}`} aria-label={`View ${trustee.name}’s profile`}>
                 <div className={styles.portrait}>
-                  <Image src={trustee.photo} alt={`Portrait of ${trustee.name}`} fill sizes="(max-width: 640px) 88vw, (max-width: 1000px) 42vw, 28vw" />
+                  <Image src={trustee.photo} alt={`Portrait of ${trustee.name}`} fill sizes="(max-width: 640px) 88vw, (max-width: 1000px) 42vw, 28vw" quality={75} />
                   <span className={styles.batch}>Batch {trustee.batch}</span>
                 </div>
                 <div className={styles.cardBody}>

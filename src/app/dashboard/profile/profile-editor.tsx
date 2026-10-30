@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
-import { type ProfileDetails } from "@/lib/alumni-profile";
+import { normalizeProfile, type ProfileDetails } from "@/lib/alumni-profile";
 import { updateProfile } from "@/lib/account-api";
 import { toDirectoryEntry } from "@/lib/alumni-directory";
 import AlumniFields from "@/app/register/alumni-fields";
@@ -13,7 +13,7 @@ import styles from "../dashboard.module.css";
 export default function ProfileEditor() {
   const profile = useAlumniProfile();
   const listing = toDirectoryEntry(profile);
-  const [details, setDetails] = useState<ProfileDetails>(profile);
+  const [details, setDetails] = useState<ProfileDetails>(() => normalizeProfile(profile));
   const [original, setOriginal] = useState(profile);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);

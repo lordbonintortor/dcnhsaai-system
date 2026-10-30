@@ -10,6 +10,8 @@ export type ProfileDetails = {
   firstName: string;
   middleName: string;
   lastName: string;
+  suffix: string;
+  country: string;
   email: string;
   mobile: string;
   professions: string[];
@@ -29,7 +31,7 @@ export type AlumniProfile = ProfileDetails & {
 };
 
 export const emptyProfile: ProfileDetails = {
-  batchYear: "", section: "", adviser: "", firstName: "", middleName: "", lastName: "", email: "",
+  batchYear: "", section: "", adviser: "", firstName: "", middleName: "", lastName: "", suffix: "", country: "", email: "",
   mobile: "", professions: [], otherProfession: "", employers: "", photoDataUrl: "",
 };
 
@@ -42,6 +44,8 @@ export function normalizeProfile(profile: ProfileDetails): ProfileDetails {
     firstName: profile.firstName.trim(),
     middleName: profile.middleName.trim(),
     lastName: profile.lastName.trim(),
+    suffix: profile.suffix?.trim() ?? "",
+    country: profile.country?.trim() ?? "",
     email: profile.email?.trim().toLowerCase() ?? "",
     mobile: profile.mobile?.trim() ?? "",
     employers: profile.employers.trim(),
@@ -56,6 +60,7 @@ export function profileError(profile: ProfileDetails): string | null {
   const year = Number(profile.batchYear);
   if (!Number.isInteger(year) || year < 1922 || year > new Date().getFullYear()) return "Enter a valid batch year from 1922 to the current year.";
   if (!profile.firstName.trim() || !profile.lastName.trim()) return "Enter your first and last name.";
+  if (!profile.country.trim()) return "Enter your current country of residence.";
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email.trim())) return "Enter a valid email address.";
   if (!profile.professions.length || profile.professions.some(value => !professions.includes(value as typeof professions[number]))) return "Select at least one profession or occupation.";
   if (profile.professions.includes("Other") && !profile.otherProfession.trim()) return "Specify your other profession or occupation.";

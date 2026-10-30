@@ -71,6 +71,7 @@ export default function ApplicationDetails({ profile, onSaved }: { profile: Alum
 
   const fields = [
     ["Batch year", profile.batchYear], ["Middle / maiden name", profile.middleName],
+    ["Suffix", profile.suffix], ["Country of current residence", profile.country],
     ["Section", profile.section], ["Class adviser", profile.adviser],
     ["Username", profile.username || "Not assigned"], ["Email address", profile.email], ["Mobile number", profile.mobile],
     ["Profession / occupation", professionLabel(profile)], ["Employers / businesses", profile.employers],

@@ -64,8 +64,9 @@ export async function requireOfficer(client: SupabaseClient) {
 export function detailsInput(input: unknown): ProfileDetails {
   if (!input || typeof input !== "object" || Array.isArray(input)) throw new ApiError("Enter your alumni information.");
   const raw = input as Record<string, unknown>;
-  const fields = ["batchYear", "section", "adviser", "firstName", "middleName", "lastName", "email", "mobile", "otherProfession", "employers"];
+  const fields = ["batchYear", "section", "adviser", "firstName", "middleName", "lastName", "suffix", "country", "email", "mobile", "otherProfession", "employers"];
   for (const field of fields) {
+    if (raw[field] === undefined && (field === "suffix" || field === "country" || field === "email")) raw[field] = "";
     if (typeof raw[field] !== "string" || raw[field].length > (field === "employers" ? 2000 : 200)) throw new ApiError("Check your alumni information. A field is missing or too long.");
   }
   if (!Array.isArray(raw.professions) || raw.professions.length > 8 || !raw.professions.every(value => typeof value === "string")) throw new ApiError("Select a valid profession.");

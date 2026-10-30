@@ -20,7 +20,7 @@ export default function DirectoryList({ myBatchYear, memberProfiles = false }: {
   return (
     <section className={styles.directory}>
       <div className={styles.heading}>
-        <div><p className={styles.eyebrow}>Find your City High community</p><h1>Alumni directory</h1><p>{memberProfiles ? "Find fellow alumni by name or batch year. Select a name to view their member profile." : "Search across batches. Only alumni names and batch years appear here."}</p></div>
+        <div><p className={styles.eyebrow}>Find your City High community</p><h1>Alumni directory</h1><p>{memberProfiles ? "Find fellow alumni by name or batch year. Select a name to view their member profile." : "Search across batches by name or batch year."}</p></div>
         {myBatchYear && <Link href="/dashboard/profile">Edit my profile <span aria-hidden="true">↗</span></Link>}
       </div>
       <form className={`${styles.filters} ${!myBatchYear ? styles.publicFilters : ""}`} role="search" aria-label="Search alumni directory" onSubmit={event => event.preventDefault()}>
@@ -41,7 +41,7 @@ export default function DirectoryList({ myBatchYear, memberProfiles = false }: {
           <tbody>{results.map(entry => <tr key={entry.id}><td>{memberProfiles ? <Link className={styles.memberLink} href={`/dashboard/directory/${encodeURIComponent(entry.id)}`} aria-label={`View profile of ${entry.name}`} prefetch={false}>{entry.name}<span aria-hidden="true"> ↗</span></Link> : entry.name}</td><td>{entry.batchYear}</td></tr>)}</tbody>
         </table>
       )}
-      <p className={styles.note}>The directory lists approved alumni. Public listings show only names and batch years.</p>
+      <p className={styles.note}>The directory lists approved alumni. Select an alumnus&apos; name to view their available contact and profile details.</p>
     </section>
   );
 }
