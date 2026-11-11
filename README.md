@@ -4,6 +4,8 @@ Website and alumni registry for the Davao City National High School Alumni Assoc
 
 Live testing site: [dcnhsaai-system.onrender.com](https://dcnhsaai-system.onrender.com). Render serves the Next.js application; Supabase provides authentication, database records, and private profile photos. Hostinger remains a possible later hosting move. See [deployment steps](docs/DEPLOYMENT.md).
 
+For the requested move to Vercel, follow [the Vercel migration guide](docs/VERCEL-MIGRATION.md). The repository already includes `vercel.json`; account data stays in the existing Supabase project. Vercel deployment and the hosting switch remain pending.
+
 ## Current status — November 11, 2026
 
 **Render deployment confirmed.** GitHub records a successful deployment on October 30, 2026 at the URL above. A fresh read-only check on November 11 returned HTTP 200 with `{"status":"ok"}` from `/api/health`. This verifies the endpoint's backend checks; it does not replace interactive registration, officer-review, password-recovery, and photo-upload checks. Local changes reach Render after they are committed and pushed to the linked branch and its deployment succeeds.

@@ -2,6 +2,8 @@
 
 The application uses Supabase Auth, PostgreSQL records, and private photo storage. The testing site is deployed at [dcnhsaai-system.onrender.com](https://dcnhsaai-system.onrender.com). GitHub records a successful Render deployment on October 30, 2026; a fresh check on November 11 returned HTTP 200 with `{"status":"ok"}` from `/api/health`. Local changes require a successful deployment before they appear on that site. The setup steps below are retained for new environments.
 
+**Vercel migration requested November 11:** use [the Vercel migration guide](VERCEL-MIGRATION.md) for project import, plan eligibility, environment variables, private-document checks, and the hosting switch. Render remains the recorded live host until Vercel is deployed and verified.
+
 ## Account workflow
 
 Registration collects alumni details, contact email, country of residence, the graduate declaration, and consent, then creates a pending alumni profile. Both alumni and officers sign in with a username and password. Contact email is part of profile details and is not accepted as a website sign-in identifier. Officer review checks alumni eligibility. Applicants sign in to read decisions, correct details, and resubmit when asked.
