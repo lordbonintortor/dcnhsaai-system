@@ -1,10 +1,10 @@
 # Supabase deployment: Render first, Hostinger later
 
-This replaces browser-only accounts with Supabase Auth, PostgreSQL records, and private photo storage. The current checkout is not deployed until the service account setup and live verification below are completed.
+The application uses Supabase Auth, PostgreSQL records, and private photo storage. The testing site is deployed at [dcnhsaai-system.onrender.com](https://dcnhsaai-system.onrender.com). GitHub records a successful Render deployment on October 30, 2026; a fresh check on November 11 returned HTTP 200 with `{"status":"ok"}` from `/api/health`. Local changes require a successful deployment before they appear on that site. The setup steps below are retained for new environments.
 
 ## Account workflow
 
-Registration collects the graduate declaration and consent, then creates a pending alumni profile. Both alumni and officers sign in with a username and password. Email is not collected, displayed, searched, or accepted as a website sign-in identifier. Officer review checks alumni eligibility. Applicants sign in to read decisions, correct details, and resubmit when asked.
+Registration collects alumni details, contact email, country of residence, the graduate declaration, and consent, then creates a pending alumni profile. Both alumni and officers sign in with a username and password. Contact email is part of profile details and is not accepted as a website sign-in identifier. Officer review checks alumni eligibility. Applicants sign in to read decisions, correct details, and resubmit when asked.
 
 Usernames use 3–30 letters, numbers, or underscores, starting with a letter, and are case-insensitive. They cannot be edited from the profile. Existing accounts receive unique usernames during the migration; their passwords, officer access, profile IDs, status, and review history are retained. The migration removes the old profile email column. It returns a list of assigned usernames for the operator to distribute privately.
 
@@ -12,7 +12,7 @@ Supabase's password API still needs an internal email-shaped identifier ([API re
 
 The username lookup requires a server-only `SUPABASE_SECRET_KEY` ([Supabase key guidance](https://supabase.com/docs/guides/getting-started/api-keys)). Never put it in a `NEXT_PUBLIC_` variable, source control, or chat. Confirmation and recovery emails remain disabled; account recovery is assisted by the association. Do not send mail to internal identifiers.
 
-Only approved alumni appear in the public directory. That directory returns names and batch years. Approved alumni can view fellow approved members’ names, batch years, photos, and professions. Pending applicants can access their own profile and application. This is the initial production listing/access rule, pending association feedback.
+Only approved alumni appear in the public directory. The latest directory migration returns names, batch years, and name suffixes, excluding contact email and country of residence. Approved alumni can open fellow approved members’ profiles with names, batch years, photos, professions, contact email, and country. Pending applicants can access their own profile and application.
 
 Officers use real Supabase accounts with a separately assigned database role. No demo credentials or browser demo records are used by the website. Application decisions and history are saved together in a database transaction. Stale forms/decisions are rejected instead of overwriting newer changes. Changes to an approved name or batch year return the application to pending review.
 
@@ -24,6 +24,7 @@ Use an association-owned project. If a project already exists, inspect its schem
 
 1. Apply [202610260001_alumni_registry.sql](../supabase/migrations/202610260001_alumni_registry.sql) through the Supabase SQL editor or as a Supabase migration. It creates alumni profiles, officer roles, application history, access policies, controlled mutation functions, and the private `alumni-photos` bucket. It does not import fictional demo accounts.
    Then apply [202610270002_username_only.sql](../supabase/migrations/202610270002_username_only.sql) and [202610270003_contact_email.sql](../supabase/migrations/202610270003_contact_email.sql). If the earlier migrations are already applied, run only these new files in SQL Editor. The contact-email migration keeps username sign-in while adding email to profile details; phone numbers remain optional. Existing members should add an email from **My profile**. Keep the returned usernames for your existing accounts. Apply the database updates before deploying this code. Health returns 503 until the database and server key are configured.
+   Follow with [202610270004_activity_reactions.sql](../supabase/migrations/202610270004_activity_reactions.sql), [202610270004_suffix_country.sql](../supabase/migrations/202610270004_suffix_country.sql), [202610270005_directory_email.sql](../supabase/migrations/202610270005_directory_email.sql), and finally [202610270006_directory_private_contact.sql](../supabase/migrations/202610270006_directory_private_contact.sql). Both `004` files are required. Apply `006` after `005` so contact email and country are excluded from the public directory. For existing projects, inspect migration history and apply only missing updates; do not rerun account-setup migrations against live users without checking their effects.
 2. In Supabase Authentication, enable email/password sign-in and registration. Disable **Confirm email** for the selected no-automated-email workflow. Set the minimum password length to eight characters. Registration checks the authentication settings before creating an account and refuses to proceed if email confirmation is enabled.
 3. Set the Auth Site URL to the website’s HTTPS origin. Disable unused social, anonymous, and phone providers. Keep Supabase Auth rate limits enabled.
 4. Create each authorized officer through Supabase Authentication → Users. Use an auto-confirmed account with an internal identifier such as `chosen_officer@alumni.dcnhsaai.invalid` and deliver its initial password privately. The signup trigger assigns a temporary username; set the intended username in the next step. Do not publish credentials in the source repository.
@@ -60,7 +61,7 @@ npm test
 npm run build -- --webpack
 ```
 
-The database tests execute the actual migration in embedded PostgreSQL with minimal Supabase Auth/Storage schema fixtures. Run `TEST_PREVIOUS_USERNAME_MIGRATION=1 node --conditions=react-server --test tests/registry.test.mjs` as well to check upgrading from the optional-email version. They check signup validation, row-level access, role escalation, decision messages/history, stale edits, resubmission, directory projections, and private-photo rules. They do not replace integration checks against Supabase Auth and Storage.
+The database tests execute the baseline registry and username-only migrations in embedded PostgreSQL with minimal Supabase Auth/Storage schema fixtures. Run `TEST_PREVIOUS_USERNAME_MIGRATION=1 node --conditions=react-server --test tests/registry.test.mjs` as well to check upgrading from the optional-email version. They check signup validation, row-level access, role escalation, decision messages/history, stale edits, resubmission, directory projections, and private-photo rules for those migrations. They do not apply the later contact-email, reactions, suffix/country, or directory migrations, and do not replace integration checks against the current Supabase Auth, database, and Storage configuration.
 
 ## 3. Temporary Render deployment
 
@@ -82,7 +83,7 @@ The Blueprint uses Node.js 24, `npm ci --include=dev && npm run build -- --webpa
 
 Choose **New → Web Service**, connect the same repository/branch, select Node and Singapore, and select the **Free** instance. Use the Blueprint's build/start commands and `/api/health` health-check path. Set `NODE_VERSION=24` and the three Supabase environment variables. Then deploy and follow steps 4–5 above. This is a full Node.js web service because account routes require a running backend ([Render's Next.js guide](https://render.com/docs/deploy-nextjs-app)).
 
-Render account connection, service creation, and public URL verification are pending. No paid hosting has been activated.
+The existing service is deployed at [dcnhsaai-system.onrender.com](https://dcnhsaai-system.onrender.com). Its [October 30 successful deployment](https://dashboard.render.com/web/srv-dbg1p2ec6qcc73e2900g/deploys/dep-dbi58715efls739cd23g) is recorded in GitHub. Use the existing service for updates; the creation steps above are for replacement or additional environments. `render.yaml` configures deployment on commits to the linked branch; verify the latest deployment has succeeded after pushing a change.
 
 ## 4. Later move to Hostinger
 
@@ -106,12 +107,13 @@ When moving from Render, deploy the same reviewed source and Supabase environmen
 
 Use fictional test information and two independent browsers/devices:
 
-- Register a fictional graduate with a username; confirm there is no email field. Confirm pending status, sign in with the username (also test uppercase), reload, sign out, and sign in from a second device. Duplicate usernames and wrong passwords must be rejected.
-- Use the migration’s assigned usernames with existing alumni and officer passwords. Confirm email addresses are rejected at both sign-in pages and absent from profile/application responses. Check that alumni and officers cannot claim the same username.
+- Register a fictional graduate with a username, contact email, and country of residence. Confirm pending status, sign in with the username (also test uppercase), reload, sign out, and sign in from a second device. Duplicate usernames and wrong passwords must be rejected.
+- Use the migration’s assigned usernames with existing alumni and officer passwords. Confirm email addresses are rejected as sign-in identifiers at both sign-in pages. Contact email belongs in authorized profile/application responses; internal Auth identifiers must remain private. Check that alumni and officers cannot claim the same username.
 - Sign in as an authorized officer separately. Confirm a normal alumnus cannot open the queue or submit decisions directly to `/api/applications`.
 - Request details with a message; confirm it appears on the applicant’s device. Save a correction and resubmit. Approve, confirm directory visibility, and reject/reopen with a message. Confirm private contact details are absent from directory API responses.
 - Check that pending applicants can read their own status while other member profiles require approval. Change an approved name/batch and confirm it returns to pending and leaves the public directory.
 - Upload, replace, and remove a photo. Check the private bucket, signed-in member views, public-directory exclusion, and failure messages.
+- Check public activities and their photo galleries, projects, donation payment details, and document links. Signed-out users must be denied the BIR document, and non-officers must be denied management-report downloads.
 - Open the same application in two officer sessions and save conflicting decisions. The second stale decision must be rejected. A stale profile form must not overwrite a newer officer review.
 - Verify Remember me, sign-out, role revocation, phone/desktop layouts, HTTPS, and disabled email notices.
 
@@ -135,11 +137,17 @@ The sign-in page directs users to contact the association for account-access hel
 
 The recovery action requires the server-only `SUPABASE_SECRET_KEY`, which is already required for username lookup. The key must be configured in local and Render runtime environments and must never be exposed as a `NEXT_PUBLIC_*` variable. If an account is not associated with an alumni profile, or the officer cannot verify the user’s identity, do not issue a temporary password.
 
-Events, projects, reports, awardees, and donation account details still need approved content. The public page placeholders remain visible. Browser demo accounts are not transferred automatically; use newly registered test accounts for integration checks.
+Activities, projects, trustee profiles, association documents, financial-report links, and BDO/GCash donation details are present in the current code. Awardee profiles remain in preparation. Browser demo accounts are not transferred automatically; use newly registered test accounts for integration checks.
 
 ## Deployment status
 
-Current status, October 27: the user reported that fresh username-based alumni registration/sign-in, officer sign-in, and approval passed after the reset. The approval test covered the officer decision, Verified status in the alumni portal, and name/batch visibility in the public directory. Earlier read-only checks verified the new pending alumni record and a healthy local website. These latest interactive results are user-reported. Hosting plan/domain details, photo checks, and final validation on the deployed website remain outstanding. The entries below retain the earlier setup history.
+Current status, November 11: Render deployment is confirmed through GitHub's successful October 30 deployment record. The live `/api/health` endpoint returned HTTP 200 with `{"status":"ok"}`. Eight incorrect activity-image paths were corrected locally; they reach the live site only after deployment. Full interactive account, officer-review, recovery, and photo-upload checks were not performed during this maintenance review.
+
+### Historical setup notes — October 2026
+
+The entries below describe earlier states and are retained as history. Their pending-deployment and email-field statements are superseded by the current status and account workflow above.
+
+October 27: the user reported that fresh username-based alumni registration/sign-in, officer sign-in, and approval passed after the reset. The approval test covered the officer decision, Verified status in the alumni portal, and name/batch visibility in the public directory. Earlier read-only checks verified the new pending alumni record and a healthy local website. These interactive results are user-reported.
 
 Local validation on October 26, 2026: lint passed; all 17 database/request/photo tests passed; the Webpack production build and TypeScript checks passed; and the dependency audit reported zero vulnerabilities after upgrading Next.js to 16.4.3 and applying compatible dependency fixes. Built-server smoke checks confirmed seven main routes return HTTP 200, unconfigured account/database APIs return uncached HTTP 503 responses, cross-site mutation requests are rejected, and demo officer credentials are absent from the served login page and client bundles. Interactive browser and live Supabase integration checks are still pending.
 

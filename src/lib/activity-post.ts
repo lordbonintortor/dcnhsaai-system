@@ -50,7 +50,7 @@ export const februaryTwentyOneActivity = {
   summary: "The DCNHSAAI Board of Trustees laid out its strategic plan for 2025, focusing on initiatives designed to strengthen the association and its impact on alumni and the school community.",
   body: "During its regular meeting on February 21, 2025, the DCNHSAAI Board of Trustees laid out its strategic plan for the year, focusing on initiatives designed to strengthen the association and its impact on alumni and the school community.\n\nKey activities were approved under four major goals:\n\n1. Strengthening Alumni Engagement – fostering stronger connections among alumni through events, networking opportunities, and collaborative projects.\n\n2. Enhancing Career and Educational Support – providing resources, mentorship, and scholarships to support alumni and current students in their academic and professional journeys.\n\n3. Institutional Support – contributing to the growth and development of our alma mater through various initiatives.\n\n4. Promoting Lifelong Learning and Community Involvement – encouraging continuous education, skill-building, and active participation in community service.\n\nAdditionally, the Board approved measures to enhance the association’s organizational structure, ensuring a more effective and sustainable leadership framework.\n\nLet us come together in support of these initiatives as we work towards a more connected, empowered, and thriving DCNHSAAI community. Here’s to a year of progress and shared success in service to our fellow “Taga City High” and our beloved alma mater.\n\nMabuhay, Davao City High! ✨",
   images: [
-    { src: "/events/february252026/image-1.jpg", alt: "DCNHSAAI Board of Trustees meeting on February 21, 2025" },
+    { src: "/events/february212025/image-1.jpg", alt: "DCNHSAAI Board of Trustees meeting on February 21, 2025" },
   ],
 } as const;
 
@@ -62,10 +62,10 @@ export const aprilTwoActivity = {
   summary: "The DCNHS Alumni Association welcomed Senior High School Batch 2025 during their graduation practice and served snacks to 2,000 graduating students.",
   body: "Last April 2, 2025, the Davao City National High School Alumni Association, Inc. proudly extended its heartfelt support to our beloved alma mater by welcoming the Senior High School Batch 2025 during their graduation practice.\n\nIn a simple yet meaningful gesture, we served snacks to 2,000 graduating students—soon-to-be alumni—marking their transition from learners to lifelong members of our DCNHS family. It was a special moment of connection and celebration, as we introduced them to the purpose and heart of our alumni association. 🍩💖\n\nThis kickoff activity was followed by a two-day room-to-room campaign led by members of our Board of Trustees, who passionately shared our vision, mission, and this year's goals. Our aim? To inspire and encourage our future alumni to become active members and contributors to the legacy of excellence that defines Davao City High. 🏫✨\n\n🙏 To our alma mater, thank you for the warm welcome.\n\n🎉 To Batch 2025, congratulations! May your journey ahead be filled with success, joy, and purpose. We look forward to seeing you shine and give back as proud alumni.\n\n💙 Mabuhay, Davao City High! Padayon, mga Iskolar! 💙\n\n#DCNHSAlumni #Batch2025 #MabuhayDavaoCityHigh #FromStudentsToAlumni #ProudIskolar",
   images: [
-    { src: "/events/april22026/image-april-1.jpg", alt: "DCNHS Alumni Association welcoming Senior High School Batch 2025" },
-    { src: "/events/april22026/image-april-2.jpg", alt: "DCNHS Alumni Association supporting graduating students" },
-    { src: "/events/april22026/image-april-3.jpg", alt: "Senior High School Batch 2025 graduation practice activity" },
-    { src: "/events/april22026/image-april-4.jpg", alt: "DCNHS alumni and graduating students during the April 2 activity" },
+    { src: "/events/april22025/image-april-1.jpg", alt: "DCNHS Alumni Association welcoming Senior High School Batch 2025" },
+    { src: "/events/april22025/image-april-2.jpg", alt: "DCNHS Alumni Association supporting graduating students" },
+    { src: "/events/april22025/image-april-3.jpg", alt: "Senior High School Batch 2025 graduation practice activity" },
+    { src: "/events/april22025/image-april-4.jpg", alt: "DCNHS alumni and graduating students during the April 2 activity" },
   ],
 } as const;
 
@@ -77,9 +77,9 @@ export const aprilTwentyTwoActivity = {
   summary: "DCNHS Batch 1972 welcomed its newly elected officers during an induction ceremony led by President Mr. Dodong Arizona.",
   body: "Congratulations to the newly elected officers of DCNHS Batch 1972, led by President Mr. Dodong Arizona! 🎉🎊👏\n\nDuring the induction ceremony last April 22, 2025, Atty. Niceforo V. Solis, Jr., President of the DCNHS Alumni Association, shared heartfelt words as the inducting officer. He expressed deep admiration for the strong bond and enduring community that Batch 1972 has built and nurtured over the years. 🤝💙\n\n“More than anything else, let us celebrate the gift of community and the presence of each one in this wonderful circle of friends and classmates.” — Atty. Solis 🌟\n\nTo Batch 1972, your spirit of unity and service is truly inspiring. May you continue to be shining examples of love, leadership, and lifelong friendship in the DCNHS alumni community.\n\nMabuhay, Davao City High! 🥳\n\n#DCNHSAlumni #Batch1972 #DCHSPride #OneCommunity #MabuhayDavaoCityHigh",
   images: [
-    { src: "/events/april222026/image-april22-1.jpg", alt: "Newly elected DCNHS Batch 1972 officers" },
-    { src: "/events/april222026/image-april22-2.jpg", alt: "DCNHS Batch 1972 induction ceremony" },
-    { src: "/events/april222026/image-april22-3.jpg", alt: "DCNHS Alumni Association President inducting Batch 1972 officers" },
+    { src: "/events/april222025/image-april22-1.jpg", alt: "Newly elected DCNHS Batch 1972 officers" },
+    { src: "/events/april222025/image-april22-2.jpg", alt: "DCNHS Batch 1972 induction ceremony" },
+    { src: "/events/april222025/image-april22-3.jpg", alt: "DCNHS Alumni Association President inducting Batch 1972 officers" },
   ],
 } as const;
 

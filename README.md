@@ -2,17 +2,19 @@
 
 Website and alumni registry for the Davao City National High School Alumni Association, Inc.
 
-Deployment target: Render's free tier for temporary testing, with Hostinger planned later. Both use the same Supabase project. `render.yaml` defines a free Node.js web service; account connection and deployment are pending. See [deployment steps](docs/DEPLOYMENT.md).
+Live testing site: [dcnhsaai-system.onrender.com](https://dcnhsaai-system.onrender.com). Render serves the Next.js application; Supabase provides authentication, database records, and private profile photos. Hostinger remains a possible later hosting move. See [deployment steps](docs/DEPLOYMENT.md).
 
-## Current development — October 26, 2026
+## Current status — November 11, 2026
 
-**October 27 username-only update:** Alumni and officers now use username/password sign-in. Account email fields have been removed. The user applied [the username-only migration](supabase/migrations/202610270002_username_only.sql), cleared the old accounts, and saved the server secret key. Read-only checks verified the connection and a healthy local website. The user then reported successful fresh alumni registration/sign-in, officer sign-in, approval, Verified status, and public-directory visibility. Production hosting and the remaining live checks are pending. For a new environment, follow [the deployment guide](docs/DEPLOYMENT.md); the username-only migration supports both earlier schema states.
+**Render deployment confirmed.** GitHub records a successful deployment on October 30, 2026 at the URL above. A fresh read-only check on November 11 returned HTTP 200 with `{"status":"ok"}` from `/api/health`. This verifies the endpoint's backend checks; it does not replace interactive registration, officer-review, password-recovery, and photo-upload checks. Local changes reach Render after they are committed and pushed to the linked branch and its deployment succeeds.
 
-The account screens now use server APIs backed by Supabase Auth, PostgreSQL, and private photo storage. Registration starts at pending review. Officers can approve, request details, or reject; applicants sign in to read messages and resubmit. Automated emails remain disabled. Approved alumni appear in the public name-and-batch directory and can view other approved members’ basic profiles.
+Alumni and officers sign in with a username and password. Contact email and country of residence are collected in alumni details; email is not the sign-in identifier. Registration starts at pending review. Officers can approve, request details, or reject; applicants sign in to read messages and resubmit. Automated emails remain disabled. Officer-assisted temporary passwords require a password change on the next sign-in.
 
-**Local Supabase connection verified; production deployment is pending.** The user has created the project, applied the migration, configured authentication, and saved local connection variables. The website health, public-directory endpoint, and signed-out access checks pass. On October 27, the user reported that the guided registration/sign-in, officer-login, and request-details/resubmission/approval tests passed, including approved-directory visibility. Hosting setup and final checks on the hosted site are next. Missing configuration returns a service error; the website does not fall back to browser-only accounts. The historical demo credentials below do not work in this version.
+Approved alumni appear in the public name-and-batch directory, including name suffixes. Approved members can open member profiles with photo, profession, contact email, and country of residence. Contact email and country are excluded from the public directory by the latest migration. Missing backend configuration returns a service error; the website does not fall back to browser-only accounts. Historical demo credentials below do not work in this version.
 
-Use Node.js 22 or 24. For a new environment, copy `.env.example` to `.env.local` and follow [the deployment guide](docs/DEPLOYMENT.md) for Supabase configuration, Hostinger setup, and live verification. The Supabase migration has been applied by the user; production hosting has not been deployed yet.
+Public pages include alumni activities, projects by year, trustee profiles, association documents, and donation payment details. Management-report downloads require officer access; the BIR document requires sign-in. Awardee profiles remain in preparation. Eight incorrect activity-image paths have been corrected in this checkout.
+
+Use Node.js 22 or 24. For a new environment, copy `.env.example` to `.env.local` and follow [the deployment guide](docs/DEPLOYMENT.md) for Supabase configuration, Render/Hostinger setup, and live verification. Keep all server credentials private.
 
 ```bash
 npm ci

@@ -34,6 +34,7 @@ export default function PublicHeader({ children }: { children: React.ReactNode }
         </span>
       </Link>
       <nav className="desktop-nav" aria-label="Main navigation">
+        <Link href="/">Home</Link>
         <Link href="/about">About Us</Link>
         {children}
       </nav>
@@ -64,6 +65,7 @@ export default function PublicHeader({ children }: { children: React.ReactNode }
         <nav className="mobile-nav" id="mobile-navigation" aria-label="Mobile navigation" onClick={(event) => {
           if ((event.target as HTMLElement).closest("a")) setMenuOpen(false);
         }}>
+          <Link href="/">Home</Link>
           <Link href="/about">About Us</Link>
           {children}
         </nav>
